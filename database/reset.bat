@@ -15,6 +15,12 @@ echo Recreating %DB%
 "%MYSQL%" -u root -e "drop database if exists %DB%; create database %DB% character set utf8;"
 if errorlevel 1 exit /b 1
 
+rem The stored paths carry a random suffix, so a reseed writes new files and leaves the previous
+rem run's behind - still committed, and referenced by nothing. The year folders go with the
+rem database; .htaccess is ours and stays.
+echo Clearing public\uploads
+for /d %%D in (public\uploads\*) do rd /s /q "%%D"
+
 call vendor\bin\dpress install
 if errorlevel 1 exit /b 1
 

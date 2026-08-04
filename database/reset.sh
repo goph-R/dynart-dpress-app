@@ -19,6 +19,12 @@ USER=${DB_USER:-root}
 echo "Recreating $DB"
 "$MYSQL" -u "$USER" -e "drop database if exists \`$DB\`; create database \`$DB\` character set utf8;"
 
+# The stored paths carry a random suffix, so a reseed writes new files and leaves the previous
+# run's behind - still committed, and referenced by nothing. The year folders go with the
+# database; .htaccess is ours and stays.
+echo "Clearing public/uploads"
+find public/uploads -mindepth 1 -maxdepth 1 -type d -exec rm -rf {} +
+
 vendor/bin/dpress install
 php database/seed.php
 
