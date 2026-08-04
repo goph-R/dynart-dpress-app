@@ -16,6 +16,69 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `dp_category`
+--
+
+DROP TABLE IF EXISTS `dp_category`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `dp_category` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `parent_id` int(11) DEFAULT NULL,
+  `thumbnail_media_id` int(11) DEFAULT NULL,
+  `name` varchar(100) NOT NULL,
+  `slug` varchar(200) NOT NULL,
+  `description` longtext DEFAULT NULL,
+  `position` int(11) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_slug` (`slug`),
+  KEY `idx_parent_id` (`parent_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `dp_category`
+--
+
+LOCK TABLES `dp_category` WRITE;
+/*!40000 ALTER TABLE `dp_category` DISABLE KEYS */;
+INSERT INTO `dp_category` VALUES (1,NULL,NULL,'News','news',NULL,0),(2,NULL,NULL,'Guides','guides',NULL,0),(3,2,NULL,'How to','how-to',NULL,0);
+/*!40000 ALTER TABLE `dp_category` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `dp_category_aud`
+--
+
+DROP TABLE IF EXISTS `dp_category_aud`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `dp_category_aud` (
+  `id` int(11) NOT NULL,
+  `parent_id` int(11) DEFAULT NULL,
+  `thumbnail_media_id` int(11) DEFAULT NULL,
+  `name` varchar(100) NOT NULL,
+  `slug` varchar(200) NOT NULL,
+  `description` longtext DEFAULT NULL,
+  `position` int(11) NOT NULL DEFAULT 0,
+  `rev_id` bigint(20) NOT NULL,
+  `rev_type` char(3) NOT NULL,
+  PRIMARY KEY (`id`,`rev_id`),
+  KEY `idx_parent_id` (`parent_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `dp_category_aud`
+--
+
+LOCK TABLES `dp_category_aud` WRITE;
+/*!40000 ALTER TABLE `dp_category_aud` DISABLE KEYS */;
+INSERT INTO `dp_category_aud` VALUES (1,NULL,NULL,'News','news',NULL,0,2,'add'),(2,NULL,NULL,'Guides','guides',NULL,0,2,'add'),(3,2,NULL,'How to','how-to',NULL,0,2,'add');
+/*!40000 ALTER TABLE `dp_category_aud` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `dp_content`
 --
 
@@ -43,7 +106,9 @@ CREATE TABLE `dp_content` (
   KEY `idx_author_id` (`author_id`),
   KEY `idx_published_at` (`published_at`),
   KEY `idx_type_status_published_at` (`type`,`status`,`published_at`),
-  CONSTRAINT `dp_content_ibfk_1` FOREIGN KEY (`author_id`) REFERENCES `dp_user` (`id`)
+  KEY `featured_media_id` (`featured_media_id`),
+  CONSTRAINT `dp_content_ibfk_1` FOREIGN KEY (`author_id`) REFERENCES `dp_user` (`id`),
+  CONSTRAINT `dp_content_ibfk_2` FOREIGN KEY (`featured_media_id`) REFERENCES `dp_media` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -53,8 +118,63 @@ CREATE TABLE `dp_content` (
 
 LOCK TABLES `dp_content` WRITE;
 /*!40000 ALTER TABLE `dp_content` DISABLE KEYS */;
-INSERT INTO `dp_content` VALUES (1,'post',NULL,1,NULL,'Welcome to dpress!','welcome-to-dpress','This is the lead. Everything before the separator shows up in listings, and only that.\n\n---\n\n## And this is the body\n\nThe body is everything after the first line that is nothing but three dashes. A post with no\nseparator is all lead and no body, which is exactly what a short note is.\n\nMarkdown works as you would expect: **bold**, *italic*, `inline code` and [links](https://example.com).\n\n- a list item\n- another one\n\n> A blockquote, for good measure.','<p>This is the lead. Everything before the separator shows up in listings, and only that.</p>\n','<h2>And this is the body</h2>\n<p>The body is everything after the first line that is nothing but three dashes. A post with no\nseparator is all lead and no body, which is exactly what a short note is.</p>\n<p>Markdown works as you would expect: <strong>bold</strong>, <em>italic</em>, <code>inline code</code> and <a href=\"https://example.com\">links</a>.</p>\n<ul>\n<li>a list item</li>\n<li>another one</li>\n</ul>\n<blockquote>\n<p>A blockquote, for good measure.</p>\n</blockquote>\n','published','2026-08-04 12:36:39','2026-08-04 12:36:39','2026-08-04 12:36:39'),(2,'post',NULL,2,NULL,'Árvíztűrő tükörfúrógép','arvizturo-tukorfurogep','Az ékezetes címekből is olvasható URL lesz, mert a slug az ékezeteket az alapbetűre képezi le.\n\n---\n\nEz a törzsszöveg. A cím slugja `arvizturo-tukorfurogep` lett, nem pedig kötőjelek sora.','<p>Az ékezetes címekből is olvasható URL lesz, mert a slug az ékezeteket az alapbetűre képezi le.</p>\n','<p>Ez a törzsszöveg. A cím slugja <code>arvizturo-tukorfurogep</code> lett, nem pedig kötőjelek sora.</p>\n','published','2026-08-04 12:36:39','2026-08-04 12:36:39','2026-08-04 12:36:39'),(3,'post',NULL,2,NULL,'A short note','a-short-note','No separator here, so the whole thing is the lead and there is no body.','<p>No separator here, so the whole thing is the lead and there is no body.</p>\n','','published','2026-08-04 12:36:39','2026-08-04 12:36:39','2026-08-04 12:36:39'),(4,'post',NULL,1,NULL,'Something unfinished','something-unfinished','A draft. Visitors get a 404; anybody who may edit posts can preview it.\n\n---\n\nStill being written.','<p>A draft. Visitors get a 404; anybody who may edit posts can preview it.</p>\n','<p>Still being written.</p>\n','draft',NULL,'2026-08-04 12:36:39','2026-08-04 12:36:39'),(5,'page',NULL,1,NULL,'About','about','About this site.\n\n---\n\nPages are hierarchical. This one has a child.','<p>About this site.</p>\n','<p>Pages are hierarchical. This one has a child.</p>\n','published','2026-08-04 12:36:39','2026-08-04 12:36:39','2026-08-04 12:36:39'),(6,'page',5,1,NULL,'Contact','contact','How to get in touch.','<p>How to get in touch.</p>\n','','published','2026-08-04 12:36:39','2026-08-04 12:36:39','2026-08-04 12:36:39');
+INSERT INTO `dp_content` VALUES (1,'post',NULL,1,1,'Welcome to dpress!','welcome-to-dpress','This is the lead. Everything before the separator shows up in listings, and only that.\r\n\r\n---\r\n\r\n## And this is the body\r\n\r\nThe body is everything after the first line that is nothing but three dashes. A post with no\r\nseparator is all lead and no body, which is exactly what a short note is.\r\n\r\nMarkdown works as you would expect: **bold**, *italic*, `inline code` and [links](https://example.com).\r\n\r\n- a list item\r\n- another one\r\n\r\n> A blockquote, for good measure.','<p>This is the lead. Everything before the separator shows up in listings, and only that.</p>\n','<h2>And this is the body</h2>\n<p>The body is everything after the first line that is nothing but three dashes. A post with no\nseparator is all lead and no body, which is exactly what a short note is.</p>\n<p>Markdown works as you would expect: <strong>bold</strong>, <em>italic</em>, <code>inline code</code> and <a href=\"https://example.com\">links</a>.</p>\n<ul>\n<li>a list item</li>\n<li>another one</li>\n</ul>\n<blockquote>\n<p>A blockquote, for good measure.</p>\n</blockquote>\n','published','2026-08-04 13:23:52','2026-08-04 13:23:52','2026-08-04 13:23:53'),(2,'post',NULL,2,NULL,'Árvíztűrő tükörfúrógép','arvizturo-tukorfurogep','Az ékezetes címekből is olvasható URL lesz, mert a slug az ékezeteket az alapbetűre képezi le.\r\n\r\n---\r\n\r\nEz a törzsszöveg. A cím slugja `arvizturo-tukorfurogep` lett, nem pedig kötőjelek sora.','<p>Az ékezetes címekből is olvasható URL lesz, mert a slug az ékezeteket az alapbetűre képezi le.</p>\n','<p>Ez a törzsszöveg. A cím slugja <code>arvizturo-tukorfurogep</code> lett, nem pedig kötőjelek sora.</p>\n','published','2026-08-04 13:23:52','2026-08-04 13:23:52','2026-08-04 13:23:52'),(3,'post',NULL,2,NULL,'A short note','a-short-note','No separator here, so the whole thing is the lead and there is no body.','<p>No separator here, so the whole thing is the lead and there is no body.</p>\n','','published','2026-08-04 13:23:52','2026-08-04 13:23:52','2026-08-04 13:23:52'),(4,'post',NULL,1,NULL,'Something unfinished','something-unfinished','A draft. Visitors get a 404; anybody who may edit posts can preview it.\n\n---\n\nStill being written.','<p>A draft. Visitors get a 404; anybody who may edit posts can preview it.</p>\n','<p>Still being written.</p>\n','draft',NULL,'2026-08-04 13:23:52','2026-08-04 13:23:52'),(5,'page',NULL,1,NULL,'About','about','About this site.\n\n---\n\nPages are hierarchical. This one has a child.','<p>About this site.</p>\n','<p>Pages are hierarchical. This one has a child.</p>\n','published','2026-08-04 13:23:52','2026-08-04 13:23:52','2026-08-04 13:23:52'),(6,'page',5,1,NULL,'Contact','contact','How to get in touch.','<p>How to get in touch.</p>\n','','published','2026-08-04 13:23:52','2026-08-04 13:23:52','2026-08-04 13:23:52');
 /*!40000 ALTER TABLE `dp_content` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `dp_content_attachment`
+--
+
+DROP TABLE IF EXISTS `dp_content_attachment`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `dp_content_attachment` (
+  `content_id` int(11) NOT NULL,
+  `media_id` int(11) NOT NULL,
+  `position` int(11) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`content_id`,`media_id`),
+  KEY `media_id` (`media_id`),
+  CONSTRAINT `dp_content_attachment_ibfk_1` FOREIGN KEY (`content_id`) REFERENCES `dp_content` (`id`),
+  CONSTRAINT `dp_content_attachment_ibfk_2` FOREIGN KEY (`media_id`) REFERENCES `dp_media` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `dp_content_attachment`
+--
+
+LOCK TABLES `dp_content_attachment` WRITE;
+/*!40000 ALTER TABLE `dp_content_attachment` DISABLE KEYS */;
+INSERT INTO `dp_content_attachment` VALUES (1,2,0),(1,3,0),(1,4,0);
+/*!40000 ALTER TABLE `dp_content_attachment` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `dp_content_attachment_aud`
+--
+
+DROP TABLE IF EXISTS `dp_content_attachment_aud`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `dp_content_attachment_aud` (
+  `content_id` int(11) NOT NULL,
+  `media_id` int(11) NOT NULL,
+  `position` int(11) NOT NULL DEFAULT 0,
+  `rev_id` bigint(20) NOT NULL,
+  `rev_type` char(3) NOT NULL,
+  PRIMARY KEY (`content_id`,`media_id`,`rev_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `dp_content_attachment_aud`
+--
+
+LOCK TABLES `dp_content_attachment_aud` WRITE;
+/*!40000 ALTER TABLE `dp_content_attachment_aud` DISABLE KEYS */;
+INSERT INTO `dp_content_attachment_aud` VALUES (1,2,0,2,'add'),(1,3,0,2,'add'),(1,4,0,2,'add');
+/*!40000 ALTER TABLE `dp_content_attachment_aud` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -95,8 +215,198 @@ CREATE TABLE `dp_content_aud` (
 
 LOCK TABLES `dp_content_aud` WRITE;
 /*!40000 ALTER TABLE `dp_content_aud` DISABLE KEYS */;
-INSERT INTO `dp_content_aud` VALUES (1,'post',NULL,1,NULL,'Welcome to dpress','welcome-to-dpress','This is the lead. Everything before the separator shows up in listings, and only that.\n\n---\n\n## And this is the body\n\nThe body is everything after the first line that is nothing but three dashes. A post with no\nseparator is all lead and no body, which is exactly what a short note is.\n\nMarkdown works as you would expect: **bold**, *italic*, `inline code` and [links](https://example.com).\n\n- a list item\n- another one\n\n> A blockquote, for good measure.','<p>This is the lead. Everything before the separator shows up in listings, and only that.</p>\n','<h2>And this is the body</h2>\n<p>The body is everything after the first line that is nothing but three dashes. A post with no\nseparator is all lead and no body, which is exactly what a short note is.</p>\n<p>Markdown works as you would expect: <strong>bold</strong>, <em>italic</em>, <code>inline code</code> and <a href=\"https://example.com\">links</a>.</p>\n<ul>\n<li>a list item</li>\n<li>another one</li>\n</ul>\n<blockquote>\n<p>A blockquote, for good measure.</p>\n</blockquote>\n','published','2026-08-04 12:36:39','2026-08-04 12:36:39','2026-08-04 12:36:39',2,'add'),(1,'post',NULL,1,NULL,'Welcome to dpress!','welcome-to-dpress','This is the lead. Everything before the separator shows up in listings, and only that.\n\n---\n\n## And this is the body\n\nThe body is everything after the first line that is nothing but three dashes. A post with no\nseparator is all lead and no body, which is exactly what a short note is.\n\nMarkdown works as you would expect: **bold**, *italic*, `inline code` and [links](https://example.com).\n\n- a list item\n- another one\n\n> A blockquote, for good measure.','<p>This is the lead. Everything before the separator shows up in listings, and only that.</p>\n','<h2>And this is the body</h2>\n<p>The body is everything after the first line that is nothing but three dashes. A post with no\nseparator is all lead and no body, which is exactly what a short note is.</p>\n<p>Markdown works as you would expect: <strong>bold</strong>, <em>italic</em>, <code>inline code</code> and <a href=\"https://example.com\">links</a>.</p>\n<ul>\n<li>a list item</li>\n<li>another one</li>\n</ul>\n<blockquote>\n<p>A blockquote, for good measure.</p>\n</blockquote>\n','published','2026-08-04 12:36:39','2026-08-04 12:36:39','2026-08-04 12:36:39',3,'mod'),(2,'post',NULL,2,NULL,'Árvíztűrő tükörfúrógép','arvizturo-tukorfurogep','Az ékezetes címekből is olvasható URL lesz, mert a slug az ékezeteket az alapbetűre képezi le.\n\n---\n\nEz a törzsszöveg. A cím slugja `arvizturo-tukorfurogep` lett, nem pedig kötőjelek sora.','<p>Az ékezetes címekből is olvasható URL lesz, mert a slug az ékezeteket az alapbetűre képezi le.</p>\n','<p>Ez a törzsszöveg. A cím slugja <code>arvizturo-tukorfurogep</code> lett, nem pedig kötőjelek sora.</p>\n','published','2026-08-04 12:36:39','2026-08-04 12:36:39','2026-08-04 12:36:39',2,'add'),(3,'post',NULL,2,NULL,'A short note','a-short-note','No separator here, so the whole thing is the lead and there is no body.','<p>No separator here, so the whole thing is the lead and there is no body.</p>\n','','published','2026-08-04 12:36:39','2026-08-04 12:36:39','2026-08-04 12:36:39',2,'add'),(4,'post',NULL,1,NULL,'Something unfinished','something-unfinished','A draft. Visitors get a 404; anybody who may edit posts can preview it.\n\n---\n\nStill being written.','<p>A draft. Visitors get a 404; anybody who may edit posts can preview it.</p>\n','<p>Still being written.</p>\n','draft',NULL,'2026-08-04 12:36:39','2026-08-04 12:36:39',2,'add'),(5,'page',NULL,1,NULL,'About','about','About this site.\n\n---\n\nPages are hierarchical. This one has a child.','<p>About this site.</p>\n','<p>Pages are hierarchical. This one has a child.</p>\n','published','2026-08-04 12:36:39','2026-08-04 12:36:39','2026-08-04 12:36:39',2,'add'),(6,'page',5,1,NULL,'Contact','contact','How to get in touch.','<p>How to get in touch.</p>\n','','published','2026-08-04 12:36:39','2026-08-04 12:36:39','2026-08-04 12:36:39',2,'add');
+INSERT INTO `dp_content_aud` VALUES (1,'post',NULL,1,1,'Welcome to dpress','welcome-to-dpress','This is the lead. Everything before the separator shows up in listings, and only that.\r\n\r\n---\r\n\r\n## And this is the body\r\n\r\nThe body is everything after the first line that is nothing but three dashes. A post with no\r\nseparator is all lead and no body, which is exactly what a short note is.\r\n\r\nMarkdown works as you would expect: **bold**, *italic*, `inline code` and [links](https://example.com).\r\n\r\n- a list item\r\n- another one\r\n\r\n> A blockquote, for good measure.','<p>This is the lead. Everything before the separator shows up in listings, and only that.</p>\n','<h2>And this is the body</h2>\n<p>The body is everything after the first line that is nothing but three dashes. A post with no\nseparator is all lead and no body, which is exactly what a short note is.</p>\n<p>Markdown works as you would expect: <strong>bold</strong>, <em>italic</em>, <code>inline code</code> and <a href=\"https://example.com\">links</a>.</p>\n<ul>\n<li>a list item</li>\n<li>another one</li>\n</ul>\n<blockquote>\n<p>A blockquote, for good measure.</p>\n</blockquote>\n','published','2026-08-04 13:23:52','2026-08-04 13:23:52','2026-08-04 13:23:52',2,'mod'),(1,'post',NULL,1,1,'Welcome to dpress!','welcome-to-dpress','This is the lead. Everything before the separator shows up in listings, and only that.\r\n\r\n---\r\n\r\n## And this is the body\r\n\r\nThe body is everything after the first line that is nothing but three dashes. A post with no\r\nseparator is all lead and no body, which is exactly what a short note is.\r\n\r\nMarkdown works as you would expect: **bold**, *italic*, `inline code` and [links](https://example.com).\r\n\r\n- a list item\r\n- another one\r\n\r\n> A blockquote, for good measure.','<p>This is the lead. Everything before the separator shows up in listings, and only that.</p>\n','<h2>And this is the body</h2>\n<p>The body is everything after the first line that is nothing but three dashes. A post with no\nseparator is all lead and no body, which is exactly what a short note is.</p>\n<p>Markdown works as you would expect: <strong>bold</strong>, <em>italic</em>, <code>inline code</code> and <a href=\"https://example.com\">links</a>.</p>\n<ul>\n<li>a list item</li>\n<li>another one</li>\n</ul>\n<blockquote>\n<p>A blockquote, for good measure.</p>\n</blockquote>\n','published','2026-08-04 13:23:52','2026-08-04 13:23:52','2026-08-04 13:23:53',3,'mod'),(2,'post',NULL,2,NULL,'Árvíztűrő tükörfúrógép','arvizturo-tukorfurogep','Az ékezetes címekből is olvasható URL lesz, mert a slug az ékezeteket az alapbetűre képezi le.\r\n\r\n---\r\n\r\nEz a törzsszöveg. A cím slugja `arvizturo-tukorfurogep` lett, nem pedig kötőjelek sora.','<p>Az ékezetes címekből is olvasható URL lesz, mert a slug az ékezeteket az alapbetűre képezi le.</p>\n','<p>Ez a törzsszöveg. A cím slugja <code>arvizturo-tukorfurogep</code> lett, nem pedig kötőjelek sora.</p>\n','published','2026-08-04 13:23:52','2026-08-04 13:23:52','2026-08-04 13:23:52',2,'add'),(3,'post',NULL,2,NULL,'A short note','a-short-note','No separator here, so the whole thing is the lead and there is no body.','<p>No separator here, so the whole thing is the lead and there is no body.</p>\n','','published','2026-08-04 13:23:52','2026-08-04 13:23:52','2026-08-04 13:23:52',2,'add'),(4,'post',NULL,1,NULL,'Something unfinished','something-unfinished','A draft. Visitors get a 404; anybody who may edit posts can preview it.\n\n---\n\nStill being written.','<p>A draft. Visitors get a 404; anybody who may edit posts can preview it.</p>\n','<p>Still being written.</p>\n','draft',NULL,'2026-08-04 13:23:52','2026-08-04 13:23:52',2,'add'),(5,'page',NULL,1,NULL,'About','about','About this site.\n\n---\n\nPages are hierarchical. This one has a child.','<p>About this site.</p>\n','<p>Pages are hierarchical. This one has a child.</p>\n','published','2026-08-04 13:23:52','2026-08-04 13:23:52','2026-08-04 13:23:52',2,'add'),(6,'page',5,1,NULL,'Contact','contact','How to get in touch.','<p>How to get in touch.</p>\n','','published','2026-08-04 13:23:52','2026-08-04 13:23:52','2026-08-04 13:23:52',2,'add');
 /*!40000 ALTER TABLE `dp_content_aud` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `dp_content_category`
+--
+
+DROP TABLE IF EXISTS `dp_content_category`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `dp_content_category` (
+  `content_id` int(11) NOT NULL,
+  `category_id` int(11) NOT NULL,
+  PRIMARY KEY (`content_id`,`category_id`),
+  KEY `category_id` (`category_id`),
+  CONSTRAINT `dp_content_category_ibfk_1` FOREIGN KEY (`content_id`) REFERENCES `dp_content` (`id`),
+  CONSTRAINT `dp_content_category_ibfk_2` FOREIGN KEY (`category_id`) REFERENCES `dp_category` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `dp_content_category`
+--
+
+LOCK TABLES `dp_content_category` WRITE;
+/*!40000 ALTER TABLE `dp_content_category` DISABLE KEYS */;
+INSERT INTO `dp_content_category` VALUES (1,1),(2,3),(3,1);
+/*!40000 ALTER TABLE `dp_content_category` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `dp_content_category_aud`
+--
+
+DROP TABLE IF EXISTS `dp_content_category_aud`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `dp_content_category_aud` (
+  `content_id` int(11) NOT NULL,
+  `category_id` int(11) NOT NULL,
+  `rev_id` bigint(20) NOT NULL,
+  `rev_type` char(3) NOT NULL,
+  PRIMARY KEY (`content_id`,`category_id`,`rev_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `dp_content_category_aud`
+--
+
+LOCK TABLES `dp_content_category_aud` WRITE;
+/*!40000 ALTER TABLE `dp_content_category_aud` DISABLE KEYS */;
+INSERT INTO `dp_content_category_aud` VALUES (1,1,2,'add'),(2,3,2,'add'),(3,1,2,'add');
+/*!40000 ALTER TABLE `dp_content_category_aud` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `dp_content_tag`
+--
+
+DROP TABLE IF EXISTS `dp_content_tag`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `dp_content_tag` (
+  `content_id` int(11) NOT NULL,
+  `tag_id` int(11) NOT NULL,
+  PRIMARY KEY (`content_id`,`tag_id`),
+  KEY `tag_id` (`tag_id`),
+  CONSTRAINT `dp_content_tag_ibfk_1` FOREIGN KEY (`content_id`) REFERENCES `dp_content` (`id`),
+  CONSTRAINT `dp_content_tag_ibfk_2` FOREIGN KEY (`tag_id`) REFERENCES `dp_tag` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `dp_content_tag`
+--
+
+LOCK TABLES `dp_content_tag` WRITE;
+/*!40000 ALTER TABLE `dp_content_tag` DISABLE KEYS */;
+INSERT INTO `dp_content_tag` VALUES (1,1),(1,2),(1,3),(2,2),(3,1);
+/*!40000 ALTER TABLE `dp_content_tag` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `dp_content_tag_aud`
+--
+
+DROP TABLE IF EXISTS `dp_content_tag_aud`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `dp_content_tag_aud` (
+  `content_id` int(11) NOT NULL,
+  `tag_id` int(11) NOT NULL,
+  `rev_id` bigint(20) NOT NULL,
+  `rev_type` char(3) NOT NULL,
+  PRIMARY KEY (`content_id`,`tag_id`,`rev_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `dp_content_tag_aud`
+--
+
+LOCK TABLES `dp_content_tag_aud` WRITE;
+/*!40000 ALTER TABLE `dp_content_tag_aud` DISABLE KEYS */;
+INSERT INTO `dp_content_tag_aud` VALUES (1,1,2,'add'),(1,2,2,'add'),(1,3,2,'add'),(2,2,2,'add'),(3,1,2,'add');
+/*!40000 ALTER TABLE `dp_content_tag_aud` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `dp_media`
+--
+
+DROP TABLE IF EXISTS `dp_media`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `dp_media` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `path` varchar(255) NOT NULL,
+  `file_name` varchar(255) NOT NULL,
+  `mime_type` varchar(100) NOT NULL,
+  `category` varchar(20) NOT NULL DEFAULT 'other',
+  `size` int(11) NOT NULL DEFAULT 0,
+  `width` int(11) DEFAULT NULL,
+  `height` int(11) DEFAULT NULL,
+  `alt` varchar(255) DEFAULT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `caption` longtext DEFAULT NULL,
+  `uploaded_by` int(11) NOT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `deleted_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_path` (`path`),
+  KEY `idx_category` (`category`),
+  KEY `idx_uploaded_by` (`uploaded_by`),
+  KEY `idx_deleted_at` (`deleted_at`),
+  CONSTRAINT `dp_media_ibfk_1` FOREIGN KEY (`uploaded_by`) REFERENCES `dp_user` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `dp_media`
+--
+
+LOCK TABLES `dp_media` WRITE;
+/*!40000 ALTER TABLE `dp_media` DISABLE KEYS */;
+INSERT INTO `dp_media` VALUES (1,'2026/08/sunset-photo-006436.jpg','Sunset Photo.jpg','image/jpeg','image',24991,1200,800,'Example Sunset Photo',NULL,NULL,1,'2026-08-04 13:23:52','2026-08-04 13:23:52',NULL),(2,'2026/08/icon-53bfea.svg','icon.svg','image/svg+xml','image',113,NULL,NULL,'Example icon',NULL,NULL,1,'2026-08-04 13:23:52','2026-08-04 13:23:52',NULL),(3,'2026/08/logo-8864b7.png','logo.png','image/png','image',897,300,300,'Example logo',NULL,NULL,1,'2026-08-04 13:23:53','2026-08-04 13:23:53',NULL),(4,'2026/08/notes-549a7b.txt','notes.txt','text/plain','document',14,NULL,NULL,'Example notes',NULL,NULL,1,'2026-08-04 13:23:53','2026-08-04 13:23:53',NULL);
+/*!40000 ALTER TABLE `dp_media` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `dp_media_aud`
+--
+
+DROP TABLE IF EXISTS `dp_media_aud`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `dp_media_aud` (
+  `id` int(11) NOT NULL,
+  `path` varchar(255) NOT NULL,
+  `file_name` varchar(255) NOT NULL,
+  `mime_type` varchar(100) NOT NULL,
+  `category` varchar(20) NOT NULL DEFAULT 'other',
+  `size` int(11) NOT NULL DEFAULT 0,
+  `width` int(11) DEFAULT NULL,
+  `height` int(11) DEFAULT NULL,
+  `alt` varchar(255) DEFAULT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `caption` longtext DEFAULT NULL,
+  `uploaded_by` int(11) NOT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `deleted_at` datetime DEFAULT NULL,
+  `rev_id` bigint(20) NOT NULL,
+  `rev_type` char(3) NOT NULL,
+  PRIMARY KEY (`id`,`rev_id`),
+  KEY `idx_category` (`category`),
+  KEY `idx_uploaded_by` (`uploaded_by`),
+  KEY `idx_deleted_at` (`deleted_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `dp_media_aud`
+--
+
+LOCK TABLES `dp_media_aud` WRITE;
+/*!40000 ALTER TABLE `dp_media_aud` DISABLE KEYS */;
+INSERT INTO `dp_media_aud` VALUES (1,'2026/08/sunset-photo-006436.jpg','Sunset Photo.jpg','image/jpeg','image',24991,1200,800,'Example Sunset Photo',NULL,NULL,1,'2026-08-04 13:23:52','2026-08-04 13:23:52',NULL,2,'add'),(2,'2026/08/icon-53bfea.svg','icon.svg','image/svg+xml','image',113,NULL,NULL,'Example icon',NULL,NULL,1,'2026-08-04 13:23:52','2026-08-04 13:23:52',NULL,2,'add'),(3,'2026/08/logo-8864b7.png','logo.png','image/png','image',897,300,300,'Example logo',NULL,NULL,1,'2026-08-04 13:23:53','2026-08-04 13:23:53',NULL,2,'add'),(4,'2026/08/notes-549a7b.txt','notes.txt','text/plain','document',14,NULL,NULL,'Example notes',NULL,NULL,1,'2026-08-04 13:23:53','2026-08-04 13:23:53',NULL,2,'add');
+/*!40000 ALTER TABLE `dp_media_aud` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -119,7 +429,7 @@ CREATE TABLE `dp_migration_history` (
 
 LOCK TABLES `dp_migration_history` WRITE;
 /*!40000 ALTER TABLE `dp_migration_history` DISABLE KEYS */;
-INSERT INTO `dp_migration_history` VALUES ('0001_create_revision_table','2026-08-04 12:36:38'),('0002_create_identity_tables','2026-08-04 12:36:38'),('0003_create_content_tables','2026-08-04 12:36:39');
+INSERT INTO `dp_migration_history` VALUES ('0001_create_revision_table','2026-08-04 13:23:51'),('0002_create_identity_tables','2026-08-04 13:23:51'),('0003_create_media_tables','2026-08-04 13:23:51'),('0004_create_content_tables','2026-08-04 13:23:51'),('0005_create_taxonomy_tables','2026-08-04 13:23:52');
 /*!40000 ALTER TABLE `dp_migration_history` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -177,7 +487,7 @@ CREATE TABLE `dp_revision` (
 
 LOCK TABLES `dp_revision` WRITE;
 /*!40000 ALTER TABLE `dp_revision` DISABLE KEYS */;
-INSERT INTO `dp_revision` VALUES (1,'2026-08-04 12:36:38',NULL),(2,'2026-08-04 12:36:39',NULL),(3,'2026-08-04 12:36:39','2');
+INSERT INTO `dp_revision` VALUES (1,'2026-08-04 13:23:51',NULL),(2,'2026-08-04 13:23:52',NULL),(3,'2026-08-04 13:23:53','2');
 /*!40000 ALTER TABLE `dp_revision` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -257,7 +567,7 @@ CREATE TABLE `dp_role_permission` (
 
 LOCK TABLES `dp_role_permission` WRITE;
 /*!40000 ALTER TABLE `dp_role_permission` DISABLE KEYS */;
-INSERT INTO `dp_role_permission` VALUES (2,'content.history'),(2,'page.update'),(2,'page.view'),(2,'post.create'),(2,'post.delete'),(2,'post.publish'),(2,'post.update'),(2,'post.view'),(2,'user.view');
+INSERT INTO `dp_role_permission` VALUES (2,'category.create'),(2,'category.update'),(2,'category.view'),(2,'content.history'),(2,'media.create'),(2,'media.delete'),(2,'media.update'),(2,'media.view'),(2,'page.update'),(2,'page.view'),(2,'post.create'),(2,'post.delete'),(2,'post.publish'),(2,'post.update'),(2,'post.view'),(2,'tag.create'),(2,'tag.delete'),(2,'tag.update'),(2,'tag.view'),(2,'user.view');
 /*!40000 ALTER TABLE `dp_role_permission` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -283,8 +593,61 @@ CREATE TABLE `dp_role_permission_aud` (
 
 LOCK TABLES `dp_role_permission_aud` WRITE;
 /*!40000 ALTER TABLE `dp_role_permission_aud` DISABLE KEYS */;
-INSERT INTO `dp_role_permission_aud` VALUES (2,'content.history',1,'add'),(2,'page.update',1,'add'),(2,'page.view',1,'add'),(2,'post.create',1,'add'),(2,'post.delete',1,'add'),(2,'post.publish',1,'add'),(2,'post.update',1,'add'),(2,'post.view',1,'add'),(2,'user.view',1,'add');
+INSERT INTO `dp_role_permission_aud` VALUES (2,'category.create',1,'add'),(2,'category.update',1,'add'),(2,'category.view',1,'add'),(2,'content.history',1,'add'),(2,'media.create',1,'add'),(2,'media.delete',1,'add'),(2,'media.update',1,'add'),(2,'media.view',1,'add'),(2,'page.update',1,'add'),(2,'page.view',1,'add'),(2,'post.create',1,'add'),(2,'post.delete',1,'add'),(2,'post.publish',1,'add'),(2,'post.update',1,'add'),(2,'post.view',1,'add'),(2,'tag.create',1,'add'),(2,'tag.delete',1,'add'),(2,'tag.update',1,'add'),(2,'tag.view',1,'add'),(2,'user.view',1,'add');
 /*!40000 ALTER TABLE `dp_role_permission_aud` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `dp_tag`
+--
+
+DROP TABLE IF EXISTS `dp_tag`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `dp_tag` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  `slug` varchar(200) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_slug` (`slug`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `dp_tag`
+--
+
+LOCK TABLES `dp_tag` WRITE;
+/*!40000 ALTER TABLE `dp_tag` DISABLE KEYS */;
+INSERT INTO `dp_tag` VALUES (1,'dpress','dpress'),(2,'markdown','markdown'),(3,'getting started','getting-started');
+/*!40000 ALTER TABLE `dp_tag` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `dp_tag_aud`
+--
+
+DROP TABLE IF EXISTS `dp_tag_aud`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `dp_tag_aud` (
+  `id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `slug` varchar(200) NOT NULL,
+  `rev_id` bigint(20) NOT NULL,
+  `rev_type` char(3) NOT NULL,
+  PRIMARY KEY (`id`,`rev_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `dp_tag_aud`
+--
+
+LOCK TABLES `dp_tag_aud` WRITE;
+/*!40000 ALTER TABLE `dp_tag_aud` DISABLE KEYS */;
+INSERT INTO `dp_tag_aud` VALUES (1,'dpress','dpress',2,'add'),(2,'markdown','markdown',2,'add'),(3,'getting started','getting-started',2,'add');
+/*!40000 ALTER TABLE `dp_tag_aud` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -314,7 +677,7 @@ CREATE TABLE `dp_user` (
 
 LOCK TABLES `dp_user` WRITE;
 /*!40000 ALTER TABLE `dp_user` DISABLE KEYS */;
-INSERT INTO `dp_user` VALUES (1,'admin@example.com','$2y$10$5OEmMW.0UVCkkW740UlZiu5nDlVxob3p5C7P2fTlddCT04FeqT6vK','Site Admin','active','2026-08-04 12:36:39','2026-08-04 12:36:39'),(2,'editor@example.com','$2y$10$9peoqyc6I2Kr6U0GyCcp6.6ZSX3TNXYhWIT6WCRvlbVKCLJnvDfeu','Edit Everything','active','2026-08-04 12:36:39','2026-08-04 12:36:39'),(3,'reader@example.com','$2y$10$tExOJqDQG67PiIb8J/iihOH/l1WjETsix4z4F1EgmFsoTBrrN/JcC','Ray Reader','active','2026-08-04 12:36:39','2026-08-04 12:36:39'),(4,'pending@example.com','$2y$10$GG14QtexLiQSPpF6v610ge8e6gsJuozsTITmdm1obUegXXgZHUuFC','Penny Pending','pending','2026-08-04 12:36:39','2026-08-04 12:36:39');
+INSERT INTO `dp_user` VALUES (1,'admin@example.com','$2y$10$J2XoF1fi8OuCAklSBlRMOuO5Xb23yOTNuwYY2EIT3Psx/RRB92SWq','Site Admin','active','2026-08-04 13:23:52','2026-08-04 13:23:52'),(2,'editor@example.com','$2y$10$ecM.TxCD39yK4Chppki3W.MhYCOdahhc6V5ie6STd.HAfVge/CwNy','Edit Everything','active','2026-08-04 13:23:52','2026-08-04 13:23:52'),(3,'reader@example.com','$2y$10$1rbxFASVsbKbFjDDcZ67T.LV.jS1q1TkuzrKq.hU7Ku8aW3XB0Gn6','Ray Reader','active','2026-08-04 13:23:52','2026-08-04 13:23:52'),(4,'pending@example.com','$2y$10$HUikLZwHdvImDQY7IORl9OVrexDHzCYb77.ddEueO17cfiUJTQQMW','Penny Pending','pending','2026-08-04 13:23:52','2026-08-04 13:23:52');
 /*!40000 ALTER TABLE `dp_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -346,7 +709,7 @@ CREATE TABLE `dp_user_aud` (
 
 LOCK TABLES `dp_user_aud` WRITE;
 /*!40000 ALTER TABLE `dp_user_aud` DISABLE KEYS */;
-INSERT INTO `dp_user_aud` VALUES (1,'admin@example.com','$2y$10$5OEmMW.0UVCkkW740UlZiu5nDlVxob3p5C7P2fTlddCT04FeqT6vK','Site Admin','active','2026-08-04 12:36:39','2026-08-04 12:36:39',2,'add'),(2,'editor@example.com','$2y$10$9peoqyc6I2Kr6U0GyCcp6.6ZSX3TNXYhWIT6WCRvlbVKCLJnvDfeu','Edit Everything','active','2026-08-04 12:36:39','2026-08-04 12:36:39',2,'add'),(3,'reader@example.com','$2y$10$tExOJqDQG67PiIb8J/iihOH/l1WjETsix4z4F1EgmFsoTBrrN/JcC','Ray Reader','active','2026-08-04 12:36:39','2026-08-04 12:36:39',2,'add'),(4,'pending@example.com','$2y$10$GG14QtexLiQSPpF6v610ge8e6gsJuozsTITmdm1obUegXXgZHUuFC','Penny Pending','pending','2026-08-04 12:36:39','2026-08-04 12:36:39',2,'add');
+INSERT INTO `dp_user_aud` VALUES (1,'admin@example.com','$2y$10$J2XoF1fi8OuCAklSBlRMOuO5Xb23yOTNuwYY2EIT3Psx/RRB92SWq','Site Admin','active','2026-08-04 13:23:52','2026-08-04 13:23:52',2,'add'),(2,'editor@example.com','$2y$10$ecM.TxCD39yK4Chppki3W.MhYCOdahhc6V5ie6STd.HAfVge/CwNy','Edit Everything','active','2026-08-04 13:23:52','2026-08-04 13:23:52',2,'add'),(3,'reader@example.com','$2y$10$1rbxFASVsbKbFjDDcZ67T.LV.jS1q1TkuzrKq.hU7Ku8aW3XB0Gn6','Ray Reader','active','2026-08-04 13:23:52','2026-08-04 13:23:52',2,'add'),(4,'pending@example.com','$2y$10$HUikLZwHdvImDQY7IORl9OVrexDHzCYb77.ddEueO17cfiUJTQQMW','Penny Pending','pending','2026-08-04 13:23:52','2026-08-04 13:23:52',2,'add');
 /*!40000 ALTER TABLE `dp_user_aud` ENABLE KEYS */;
 UNLOCK TABLES;
 

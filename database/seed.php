@@ -20,6 +20,8 @@ use Dynart\Dpress\Entity\Content;
 use Dynart\Dpress\Entity\Role;
 use Dynart\Dpress\Entity\User;
 use Dynart\Dpress\Service\ContentService;
+use Dynart\Dpress\Service\MediaService;
+use Dynart\Dpress\Service\TaxonomyService;
 use Dynart\Dpress\Service\UserService;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -30,6 +32,8 @@ $app->fullInit();
 $users = Micro::get(UserService::class);
 $content = Micro::get(ContentService::class);
 $audit = Micro::get(AuditService::class);
+$taxonomy = Micro::get(TaxonomyService::class);
+$media = Micro::get(MediaService::class);
 
 echo "Seeding example data\n";
 
@@ -137,6 +141,51 @@ if ($content->findBySlug('contact', false) === null) {
         'parent_id' => $about->id,
     ], $admin->id);
     echo "  page  /{$about->slug}/{$contact->slug} (child of About)\n";
+}
+
+// --- Taxonomy ---------------------------------------------------------------------------
+
+$news = $taxonomy->findCategoryBySlug('news') ?? $taxonomy->createCategory('News');
+$guides = $taxonomy->findCategoryBySlug('guides') ?? $taxonomy->createCategory('Guides');
+$howTo = $taxonomy->findCategoryBySlug('how-to') ?? $taxonomy->createCategory('How to', ['parent_id' => $guides->id]);
+echo "  cat   /news, /guides, /guides > /how-to
+";
+
+$welcome = $content->findBySlug('welcome-to-dpress', false);
+if ($welcome !== null) {
+    $taxonomy->setCategories($welcome->id, [$news->id]);
+    $taxonomy->setTags($welcome->id, ['dpress', 'markdown', 'getting started']);
+    echo "  tags  /welcome-to-dpress: dpress, markdown, getting started
+";
+}
+$note = $content->findBySlug('a-short-note', false);
+if ($note !== null) {
+    $taxonomy->setCategories($note->id, [$news->id]);
+    $taxonomy->setTags($note->id, ['dpress']);
+}
+$accented = $content->findBySlug('arvizturo-tukorfurogep', false);
+if ($accented !== null) {
+    $taxonomy->setCategories($accented->id, [$howTo->id]);
+    $taxonomy->setTags($accented->id, ['markdown']);
+}
+
+// --- Media ------------------------------------------------------------------------------
+
+$examples = __DIR__ . '/media';
+if (is_dir($examples) && $welcome !== null) {
+    foreach (glob($examples . '/*') as $file) {
+        if ($media->findByPath(basename($file)) !== null) {
+            continue;
+        }
+        $item = $media->importFile($file, $admin->id, ['alt' => 'Example ' . pathinfo($file, PATHINFO_FILENAME)]);
+        echo "  media {$item->path} ({$item->category})
+";
+        if ($item->isImage() && $welcome->featured_media_id === null && $item->isResizable()) {
+            $content->update($welcome, ['featured_media_id' => $item->id]);
+        } else {
+            $media->attach($welcome->id, $item->id);
+        }
+    }
 }
 
 // --- A second revision, so the history has something in it --------------------------------
