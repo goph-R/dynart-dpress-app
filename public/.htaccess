@@ -1,0 +1,7 @@
+RewriteEngine On
+
+# Everything that is not a real file or directory goes to the front controller.
+# The router reads the path from the `route` parameter, so the rewrite has to pass it on.
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?route=/$1 [QSA,L]
