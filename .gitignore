@@ -1,0 +1,7 @@
+/vendor/
+/composer.lock
+/logs/*
+!/logs/.gitkeep
+/uploads/*
+!/uploads/.gitkeep
+.idea/

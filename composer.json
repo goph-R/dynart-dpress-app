@@ -1,0 +1,39 @@
+{
+    "name": "dynart/dpress-app",
+    "description": "A dpress site.",
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=8.0",
+        "dynart/dpress": "@dev"
+    },
+    "repositories": {
+        "dynart-dpress": {
+            "type": "path",
+            "url": "../dynart-dpress",
+            "options": {
+                "symlink": true
+            }
+        },
+        "dynart-micro": {
+            "type": "path",
+            "url": "../dynart-micro",
+            "options": {
+                "symlink": true
+            }
+        },
+        "dynart-micro-entities": {
+            "type": "path",
+            "url": "../dynart-micro-entities",
+            "options": {
+                "symlink": true
+            }
+        }
+    }
+}
