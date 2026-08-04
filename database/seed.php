@@ -21,6 +21,8 @@ use Dynart\Dpress\Entity\Role;
 use Dynart\Dpress\Entity\User;
 use Dynart\Dpress\Service\ContentService;
 use Dynart\Dpress\Service\MediaService;
+use Dynart\Dpress\Service\MenuService;
+use Dynart\Dpress\Service\SettingService;
 use Dynart\Dpress\Service\TaxonomyService;
 use Dynart\Dpress\Service\UserService;
 
@@ -34,6 +36,8 @@ $content = Micro::get(ContentService::class);
 $audit = Micro::get(AuditService::class);
 $taxonomy = Micro::get(TaxonomyService::class);
 $media = Micro::get(MediaService::class);
+$menus = Micro::get(MenuService::class);
+$settings = Micro::get(SettingService::class);
 
 echo "Seeding example data\n";
 
@@ -186,6 +190,24 @@ if (is_dir($examples) && $welcome !== null) {
             $media->attach($welcome->id, $item->id);
         }
     }
+}
+
+// --- Settings and menus -------------------------------------------------------------------
+
+$settings->set(\Dynart\Dpress\Entity\Setting::SITE_NAME, 'dpress dev');
+$settings->set(\Dynart\Dpress\Entity\Setting::REGISTRATION_OPEN, '1');
+echo "  set   site_name, registration_open
+";
+
+if ($menus->findMenuByPlace('main') === null) {
+    $main = $menus->createMenu('Main', 'main');
+    $menus->addItem($main, ['label' => 'Home', 'target_type' => 'home', 'position' => 0]);
+    if ($about !== null) {
+        $menus->addItem($main, ['label' => 'About', 'target_type' => 'content', 'target_id' => $about->id, 'position' => 1]);
+    }
+    $menus->addItem($main, ['label' => 'News', 'target_type' => 'category', 'target_id' => $news->id, 'position' => 2]);
+    echo "  menu  Main -> place 'main': Home, About, News
+";
 }
 
 // --- A second revision, so the history has something in it --------------------------------
