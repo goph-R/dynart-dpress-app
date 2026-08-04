@@ -196,7 +196,12 @@ if (is_dir($examples) && $welcome !== null) {
 
 $settings->set(\Dynart\Dpress\Entity\Setting::SITE_NAME, 'dpress dev');
 $settings->set(\Dynart\Dpress\Entity\Setting::REGISTRATION_OPEN, '1');
-echo "  set   site_name, registration_open
+
+// The files are in public/, and the paths are relative to the site root rather than absolute, so
+// they still resolve if this app is served from somewhere other than a subfolder of localhost.
+$settings->set(\Dynart\Dpress\Entity\Setting::SITE_LOGO, '/static/dpress-logo.svg');
+$settings->set(\Dynart\Dpress\Entity\Setting::SITE_ICON, '/favicon.png');
+echo "  set   site_name, registration_open, site_logo, site_icon
 ";
 
 if ($menus->findMenuByPlace('main') === null) {

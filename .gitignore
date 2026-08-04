@@ -6,3 +6,9 @@
 !/uploads/.gitkeep
 .idea/
 /public/logs/
+
+# Generated image derivatives. A cache: Apache serves one when it exists and MediaController
+# makes it when it does not, so a checkout that has none is not missing anything.
+/public/uploads/**/*-thumb.*
+/public/uploads/**/*-medium.*
+/public/uploads/**/*-large.*
