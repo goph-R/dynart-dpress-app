@@ -33,8 +33,10 @@ database.default.table_prefix = dp_
 translation.all     = en
 translation.default = en
 
-logger.path  = "~/logs"
-logger.level = info
+; The directory is resolved against app.root_path, so this is one level above what Apache
+; serves. Keep it there: a log holds stack traces, absolute paths and bound SQL parameters.
+log.dir   = "~/logs"
+log.level = info
 
 ; At least 32 characters, HS256 refuses anything shorter, and it signs every session on the
 ; site - so generate one rather than typing one:
