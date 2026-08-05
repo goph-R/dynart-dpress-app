@@ -10,9 +10,15 @@
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
+    "_require": [
+        "`>=0.14 <1.0` rather than `^0.14`: below 1.0 the caret pins the *minor*, so `^0.13`",
+        "refused 0.14 and a server quietly stayed a release behind. This site follows dpress",
+        "forward through 0.x and stops at 1.0, which is where the promise about breaking",
+        "changes starts meaning something."
+    ],
     "require": {
         "php": ">=8.0",
-        "dynart/dpress": "^0.13"
+        "dynart/dpress": ">=0.14 <1.0"
     },
     "_repositories": [
         "One manifest for the machine the packages are written on and for a server that has",
