@@ -1,0 +1,15 @@
+<?php
+/**
+ * A number of minutes, with the unit beside the box
+ *
+ * A plugin's own widget: registered as the field type `reading_time`, rendered from this
+ * plugin's own view namespace. Nothing in the CMS knows it exists.
+ */
+$id = $form->idByNameAndField($name, $field);
+?>
+<span class="reading-time-field" data-reading-time>
+    <input id="<?= $id ?>" name="<?= $form->inputName($name) ?>" type="number" min="1" step="1"
+           value="<?= $form->value($name, true) ?>" data-reading-time-input>
+    <span class="unit">minutes</span>
+    <button type="button" class="button small" data-reading-time-clear>Work it out</button>
+</span>
