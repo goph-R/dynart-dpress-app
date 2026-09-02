@@ -37,6 +37,7 @@ $audit = Micro::get(AuditService::class);
 $taxonomy = Micro::get(TaxonomyService::class);
 $media = Micro::get(MediaService::class);
 $menus = Micro::get(MenuService::class);
+$blocks = Micro::get(\Dynart\Dpress\Service\BlockService::class);
 $settings = Micro::get(SettingService::class);
 
 echo "Seeding example data\n";
@@ -212,6 +213,27 @@ if ($menus->findMenuByPlace('main') === null) {
     }
     $menus->addItem($main, ['label' => 'News', 'target_type' => 'category', 'target_id' => $news->id, 'position' => 2]);
     echo "  menu  Main -> place 'main': Home, About, News
+";
+}
+
+// --- The sidebar ---------------------------------------------------------------------------
+
+// One of each kind, so a fresh development site shows what a place is for rather than describing
+// it. They are only added when the sidebar is empty, which is what makes this script safe to run
+// twice.
+if ($blocks->inPlace('sidebar') === []) {
+    $blocks->create('tag_cloud', ['title' => 'Tags', 'place' => 'sidebar', 'enabled' => true,
+        'settings' => ['limit' => '20']]);
+    $blocks->create('category_list', ['title' => 'Categories', 'place' => 'sidebar', 'enabled' => true,
+        'settings' => []]);
+    $blocks->create('markdown', ['title' => 'About this site', 'place' => 'sidebar', 'enabled' => true,
+        'settings' => ['markdown' => "A **markdown** block: whatever you write, beside the content.
+
+"
+            ."It is the same markdown as everywhere else, so `media#12`, [internal links](post#1) and
+"
+            ."shortcodes all work in here."]]);
+    echo "  block sidebar: tag cloud, categories, a markdown block
 ";
 }
 
