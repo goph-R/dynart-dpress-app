@@ -17,6 +17,7 @@ use Dynart\Micro\Micro;
 use Dynart\Micro\Entities\AuditService;
 use Dynart\Dpress\DpressCliApp;
 use Dynart\Dpress\Entity\Content;
+use Dynart\Dpress\Entity\Media;
 use Dynart\Dpress\Entity\Role;
 use Dynart\Dpress\Entity\User;
 use Dynart\Dpress\Service\ContentService;
@@ -67,6 +68,8 @@ $posts = [
         'title' => 'Welcome to dpress',
         'author' => $admin,
         'publish' => true,
+        // %VIDEO% is filled in after the media is imported, further down: the id of a file only
+        // exists once it has been stored, and a shortcode naming the wrong one is worse than none.
         'markdown' => <<<'MD'
 This is the lead. Everything before the separator shows up in listings, and only that.
 
@@ -77,12 +80,36 @@ This is the lead. Everything before the separator shows up in listings, and only
 The body is everything after the first line that is nothing but three dashes. A post with no
 separator is all lead and no body, which is exactly what a short note is.
 
+%VIDEO%
+
 Markdown works as you would expect: **bold**, *italic*, `inline code` and [links](https://example.com).
 
 - a list item
 - another one
 
 > A blockquote, for good measure.
+
+> [!WARNING]
+> Do not do this on a live site.
+
+> [!DANGER]
+> Very dangerous.
+
+> [!INFO]
+> The setting is in **Settings → Code theme**.
+
+```php
+<?php
+
+class ThisIsATest {
+
+    private int $test = 0;
+
+    public function __construct() {
+        $this->test = 1;
+    }
+}
+```
 MD
     ],
     [
@@ -177,6 +204,7 @@ if ($accented !== null) {
 // --- Media ------------------------------------------------------------------------------
 
 $examples = __DIR__ . '/media';
+$video = null;
 if (is_dir($examples) && $welcome !== null) {
     foreach (glob($examples . '/*') as $file) {
         if ($media->findByPath(basename($file)) !== null) {
@@ -185,12 +213,34 @@ if (is_dir($examples) && $welcome !== null) {
         $item = $media->importFile($file, $admin->id, ['alt' => 'Example ' . pathinfo($file, PATHINFO_FILENAME)]);
         echo "  media {$item->path} ({$item->category})
 ";
-        if ($item->isImage() && $welcome->featured_media_id === null && $item->isResizable()) {
+        if ($item->category === Media::CATEGORY_VIDEO) {
+            // embedded in the post rather than attached to it - an attachment is a file somebody
+            // attached, and something shown in the body is a reference in the text
+            $video = $item;
+        } else if ($item->isImage() && $welcome->featured_media_id === null && $item->isResizable()) {
             $content->update($welcome, ['featured_media_id' => $item->id]);
         } else {
             $media->attach($welcome->id, $item->id);
         }
     }
+}
+
+// The shortcode can only be written once the file it names has an id, so the placeholder left in
+// the welcome post is filled in here. No video in `database/media`, no placeholder either: a demo
+// that is missing a file should be missing the video, not showing the token that would have been.
+if ($welcome !== null && str_contains((string)$welcome->markdown, '%VIDEO%')) {
+    $content->update($welcome, ['markdown' => str_replace(
+        $video === null ? "%VIDEO%
+
+" : '%VIDEO%',
+        $video === null ? '' : "{{ video('media#{$video->id}') }}",
+        (string)$welcome->markdown
+    )]);
+    echo $video === null
+        ? "  post  no video in database/media, so none embedded
+"
+        : "  post  welcome embeds media#{$video->id}
+";
 }
 
 // --- Settings and menus -------------------------------------------------------------------
