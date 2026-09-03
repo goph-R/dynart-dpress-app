@@ -109,7 +109,7 @@ sits on the same surface as the sidebar beside it.
 | Place | Drawn by | For |
 |---|---|---|
 | `main` | both, in the bar under the header | the site's menu |
-| `social` | both, in the header | a menu of GitHub / YouTube / X links |
+| `social` | both, in the header | a menu of GitHub / YouTube / X links, **drawn as marks** |
 | `sidebar` | both | recent posts, categories, a Ko-fi block |
 | `home_top` | **the front page only** | anything that belongs there and nowhere else |
 | `footer` | both, in three columns above the copyright bar | categories, support, whatever else |
@@ -120,6 +120,20 @@ appears there. No visibility rule, nothing to configure.
 The original's footer is a single copyright bar — its theme has a widget area and the site leaves
 it empty. Here the three columns render only when the `footer` place has something in it, so an
 empty place gives you the original's bar exactly.
+
+## The social icons
+
+`dpress/menu.phtml` overrides the CMS's, and for the `social` place only it swaps the label for a
+mark. **The URL decides**, not a field on the item: an external-address item pointing at
+`github.com` gets the GitHub mark, and `www.` or a subdomain still matches. A host it does not
+know keeps its label, so adding a Mastodon link is not a broken header — it is a text link until
+somebody adds a path for it, in the one array at the top of that template.
+
+The label lives on as `aria-label` and `title`, because a mark says nothing to a screen reader.
+The paths use `fill="currentColor"`, so an icon takes the colour of the link it sits in and the
+hover state costs no second rule.
+
+Icons are Font Awesome Free (CC BY 4.0) — the same marks the original site serves.
 
 ## Featured posts
 

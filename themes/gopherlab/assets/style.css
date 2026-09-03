@@ -128,8 +128,12 @@ img, video { max-width: 100%; height: auto; }
 .spacer { flex: 1; }
 
 .site-social { display: flex; gap: 14px; align-items: center; }
-.site-social a { color: var(--text); font-size: 15px; }
+.site-social .menu { list-style: none; display: flex; gap: 16px; align-items: center; margin: 0; padding: 0; }
+.site-social a { color: var(--text); font-size: 15px; display: flex; align-items: center; }
 .site-social a:hover { color: var(--accent); }
+/* `currentColor` on the path, so a mark takes the colour of the link it sits in and the hover
+   costs no second rule. `1em` so it scales with the text a fallback label would have used. */
+.social-icon { width: 1.15em; height: 1.15em; display: block; }
 
 /* the menu bar under the header */
 .site-nav { background: var(--bar); }
