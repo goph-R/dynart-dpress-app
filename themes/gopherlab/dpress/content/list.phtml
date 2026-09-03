@@ -26,7 +26,10 @@ $featured_posts = $featured_posts ?? [];
                 <?php endif ?>
                 <span class="featured-details">
                     <h2><?= esc_html($lead['title']) ?></h2>
-                    <p class="meta"><?= esc_html(substr((string)$lead['published_at'], 0, 10)) ?></p>
+                    <p class="meta">
+                        <?php if (isset($authors[$lead['id']])): ?>by <?= esc_html($authors[$lead['id']]) ?> &mdash; <?php endif ?>
+                        <?= $dates->tag($lead['published_at']) ?>
+                    </p>
                 </span>
             </a>
             <?php if (count($featured_posts) > 1): ?>
@@ -39,7 +42,7 @@ $featured_posts = $featured_posts ?? [];
                             <?php endif ?>
                             <span>
                                 <h3><?= esc_html($post['title']) ?></h3>
-                                <span class="meta"><?= esc_html(substr((string)$post['published_at'], 0, 10)) ?></span>
+                                <span class="meta"><?= $dates->tag($post['published_at']) ?></span>
                             </span>
                         </a>
                     <?php endforeach ?>
@@ -64,7 +67,10 @@ $featured_posts = $featured_posts ?? [];
                     ?></a>
                 <?php endif ?>
                 <h2><a href="<?= esc_attr(route_url('/post/'.$post['slug'])) ?>"><?= esc_html($post['title']) ?></a></h2>
-                <p class="meta"><?= esc_html(substr((string)$post['published_at'], 0, 10)) ?></p>
+                <p class="meta">
+                    <?php if (isset($authors[$post['id']])): ?>by <?= esc_html($authors[$post['id']]) ?> &mdash; <?php endif ?>
+                    <?= $dates->tag($post['published_at']) ?>
+                </p>
                 <?= $post['lead_html'] ?>
             </article>
         <?php endforeach ?>

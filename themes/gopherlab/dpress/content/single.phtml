@@ -19,7 +19,8 @@ $this->useLayout($layout ?? 'dpress:layout');
         <?php endif ?>
         <h1 class="entry-title"><?= esc_html($content->title) ?></h1>
         <p class="meta">
-            <?= esc_html(substr((string)$content->published_at, 0, 10)) ?>
+            <?php if (($author ?? '') !== ''): ?>by <?= esc_html($author) ?> &mdash; <?php endif ?>
+            <?= $dates->tag($content->published_at) ?>
             <?php if (!$content->isPublished()): ?> &middot; <strong>draft</strong><?php endif ?>
         </p>
         <div class="entry-content">
