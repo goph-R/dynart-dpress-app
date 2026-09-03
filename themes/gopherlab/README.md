@@ -48,10 +48,20 @@ children opens a dropdown on hover **and on `:focus-within`**, which is what mak
 reachable from the keyboard.
 
 Type: **Inter** for the body at 16px/1.5 and 17px/1.7 in an article, **Roboto Condensed** 700 for
-every heading. Neither font is shipped — the stacks in `:root` fall back to the system's condensed
-and UI faces. Drop `Inter.woff2` and `RobotoCondensed.woff2` into `assets/` and uncomment the
-`@font-face` block at the top of the stylesheet; they are served from the same URL as the
-stylesheet, so nothing else has to change.
+every heading.
+
+Roboto Condensed is **self-hosted**, two variable files covering 100–900 so every heading weight
+comes out of one download. They sit in `assets/` and are served from the same URL as the
+stylesheet, which is why a bare `url(roboto-condensed-latin.woff2)` resolves. `latin-ext` carries
+the Hungarian ő and ű and has its own `unicode-range`, so a page without them never asks for that
+file; `font-display: swap` keeps a heading readable while the font arrives.
+
+Inter is not shipped — the body falls back to the system UI face. It is the same two `@font-face`
+blocks whenever it is wanted.
+
+**Bump `version` in `theme.ini` after editing the stylesheet.** Assets are served
+`immutable, max-age=1y` and the version is the whole cache buster, so without a bump a browser
+that has the old file keeps it.
 
 ## The two layouts
 

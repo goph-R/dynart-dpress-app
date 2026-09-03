@@ -35,20 +35,37 @@
     --pad:       32px;   /* between the boxed edge and the content inside it */
     --radius:    0;      /* squared: nothing in this design has a rounded corner */
     --gap:       50px;
+    --featured-inset: 40px;   /* above and beside the small featured articles, equally */
 
     --font:      Inter, "Segoe UI", system-ui, -apple-system, sans-serif;
-    --display:   "Roboto Condensed", "Arial Narrow", "Segoe UI", system-ui, sans-serif;
+    --display:   "Roboto Condensed", sans-serif;
     --mono:      monaco, consolas, "Andale Mono", "DejaVu Sans Mono", monospace;
 }
 
-/* Drop Inter.woff2 / RobotoCondensed.woff2 into this folder and uncomment - they are served from
- * the same URL as this stylesheet, and the stacks above are the fallback until then.
+/* Roboto Condensed, self-hosted: two variable files covering 100-900, so every heading weight
+ * comes out of one download. Served from this folder by `ThemeAssets`, which is why a bare
+ * filename works - the same URL as this stylesheet.
  *
- * @font-face { font-family: Inter; src: url(Inter.woff2) format("woff2");
- *              font-weight: 100 900; font-display: swap; }
- * @font-face { font-family: "Roboto Condensed"; src: url(RobotoCondensed.woff2) format("woff2");
- *              font-weight: 400 700; font-display: swap; }
+ * `latin-ext` carries the Hungarian ő and ű; `unicode-range` means a page without them never
+ * asks for that file. `swap` so a heading is readable in the fallback while the font arrives.
+ *
+ * Inter is not here yet - the body falls back to the system UI face. Same two lines when wanted.
  */
+@font-face {
+    font-family: "Roboto Condensed";
+    src: url(roboto-condensed-latin.woff2) format("woff2");
+    font-weight: 100 900; font-style: normal; font-display: swap;
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+                   U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191,
+                   U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+    font-family: "Roboto Condensed";
+    src: url(roboto-condensed-latin-ext.woff2) format("woff2");
+    font-weight: 100 900; font-style: normal; font-display: swap;
+    unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020,
+                   U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
 
 * { box-sizing: border-box; }
 
@@ -169,9 +186,10 @@ body.home .site-content { padding-top: 0; }
    still lands on the sidebar's left edge; the thumbnails sit out to the left of it. */
 @media (min-width: 1025px) {
     .featured { grid-template-columns: 60% 40%; gap: 0; }
-    /* only the big picture meets the menu bar. The small ones are a list of headings, and a list
-       of headings starting hard against a bar above it has nothing to separate it from the bar. */
-    .featured-rest { padding-left: var(--gap); padding-top: 40px; }
+    /* only the big picture meets the menu bar. The small ones are a list of headings, and a
+       list of headings hard against the bar above it has nothing separating it from the bar -
+       and the same inset above as beside, from one value so they cannot drift apart. */
+    .featured-rest { padding-left: var(--featured-inset); padding-top: var(--featured-inset); }
     /* one featured post is a banner, not a two column grid with a hole in it */
     .featured-solo { grid-template-columns: 1fr; }
 }
