@@ -153,7 +153,9 @@ body.home .site-content { padding-top: 0; }
    still lands on the sidebar's left edge; the thumbnails sit out to the left of it. */
 @media (min-width: 1025px) {
     .featured { grid-template-columns: 60% 40%; gap: 0; }
-    .featured-rest { padding-left: var(--gap); }
+    /* only the big picture meets the menu bar. The small ones are a list of headings, and a list
+       of headings starting hard against a bar above it has nothing to separate it from the bar. */
+    .featured-rest { padding-left: var(--gap); padding-top: 40px; }
     /* one featured post is a banner, not a two column grid with a hole in it */
     .featured-solo { grid-template-columns: 1fr; }
 }
