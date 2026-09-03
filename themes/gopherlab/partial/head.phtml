@@ -1,0 +1,10 @@
+<?php // Everything both layouts share above the fold. `theme:` is this theme's own namespace -
+      // `dpress:` is for overriding what the CMS ships, and this is not an override of anything. ?>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title><?= esc_html(($title ?? '').($title ?? '' ? ' – ' : '').($site_name ?? '')) ?></title>
+<?php if (!empty($site_icon)): ?>
+    <link rel="icon" href="<?= esc_attr($site_icon) ?>">
+    <link rel="apple-touch-icon" href="<?= esc_attr($site_icon) ?>">
+<?php endif ?>
+<link rel="stylesheet" href="<?= esc_attr($theme->url('style.css')) ?>">

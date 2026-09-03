@@ -1,0 +1,40 @@
+<?php
+/**
+ * The front page
+ *
+ * The same two columns as the reading layout, and one thing more: the featured strip, which is
+ * markup no other page has. `home_top` is a place drawn only here, so a block put in it is on
+ * this page and on no other - with no visibility rule anywhere.
+ *
+ * The strip itself is rendered by `content/list.phtml`, which is where `$featured` arrives.
+ */
+$sidebar = $places->render('sidebar');
+$top = $places->render('home_top');
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<?= $this->fetch('theme:partial/head', ['title' => $title ?? '']) ?>
+</head>
+<body class="<?= esc_attr($layout_kind ?? '') ?>">
+<?= $this->fetch('theme:partial/header') ?>
+<?php if ($top !== ''): ?>
+    <div class="container"><?= $top ?></div>
+<?php endif ?>
+<div class="site-content">
+    <div class="container">
+        <?php // full width, above both columns. `content/list.phtml` fills this block and the
+              // layout prints it - blocks accumulate across a render, so a template can hand the
+              // layout something that does not belong inside its own column ?>
+        <?= $this->block('featured') ?>
+    </div>
+    <div class="container content-area">
+        <main class="primary"><?= $this->block('content') ?></main>
+        <?php if ($sidebar !== ''): ?>
+            <aside class="sidebar"><?= $sidebar ?></aside>
+        <?php endif ?>
+    </div>
+</div>
+<?= $this->fetch('theme:partial/footer') ?>
+</body>
+</html>

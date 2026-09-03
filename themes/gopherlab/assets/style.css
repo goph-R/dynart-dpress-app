@@ -1,0 +1,310 @@
+/* gopherlab
+ *
+ * The design of gopherlab.net, written for dpress. The colours and the type scale are the ones
+ * the site actually computes, read off the running pages rather than guessed - a Dracula palette
+ * on a near-black page, orange headings, cyan links, yellow widget titles.
+ *
+ * Served from themes/gopherlab/assets/ by `ThemeAssets`, so a `url()` in here resolves against
+ * /assets/theme/ and any picture put beside this file just works.
+ */
+
+:root {
+    color-scheme: dark;
+
+    /* surfaces */
+    --bg:        #0e0e1c;   /* the page */
+    --bar:       #21222c;   /* header, menu, footer - a shade darker than the article */
+    --surface:   #282a36;   /* where prose is read: Dracula's own background */
+    --sunken:    rgba(0, 0, 0, .25);
+    --line:      #44475a;
+    --rule:      #6272a4;
+
+    /* ink */
+    --text:      #e2d9d9;
+    --dim:       #7d7d7d;
+    --heading:   #ffb86c;   /* Dracula orange */
+    --link:      #00c6e0;
+    --accent:    #70d3e0;
+    --widget:    #f1fa8c;   /* Dracula yellow */
+    --cyan:      #8be9fd;
+    --pink:      #ff79c6;
+    --red:       #ff5555;
+
+    /* metrics */
+    --container: 1280px;
+    --radius:    5px;
+    --gap:       50px;
+
+    --font:      Inter, "Segoe UI", system-ui, -apple-system, sans-serif;
+    --display:   "Roboto Condensed", "Arial Narrow", "Segoe UI", system-ui, sans-serif;
+    --mono:      monaco, consolas, "Andale Mono", "DejaVu Sans Mono", monospace;
+}
+
+/* Drop Inter.woff2 / RobotoCondensed.woff2 into this folder and uncomment - they are served from
+ * the same URL as this stylesheet, and the stacks above are the fallback until then.
+ *
+ * @font-face { font-family: Inter; src: url(Inter.woff2) format("woff2");
+ *              font-weight: 100 900; font-display: swap; }
+ * @font-face { font-family: "Roboto Condensed"; src: url(RobotoCondensed.woff2) format("woff2");
+ *              font-weight: 400 700; font-display: swap; }
+ */
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 16px/1.5 var(--font);
+}
+
+a { color: var(--link); text-decoration: none; }
+a:hover { color: var(--accent); }
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--display);
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--heading);
+    margin: 1.6em 0 .6em;
+}
+
+img, video { max-width: 100%; height: auto; }
+/* an iframe has no intrinsic shape, so it needs one told to it rather than kept */
+.dpress-embed { width: 100%; aspect-ratio: 16 / 9; height: auto; border: 0; display: block; }
+
+.container { width: var(--container); max-width: 95%; margin: 0 auto; }
+
+/* --- header ------------------------------------------------------------------------------- */
+
+.site-header { background: var(--bar); border-bottom: 1px solid var(--line); }
+.header-inner { display: flex; align-items: center; gap: 18px; padding: 18px 0; }
+
+.brand { display: flex; align-items: center; gap: 16px; color: var(--text); }
+.brand:hover { color: var(--text); }
+.brand img { width: 64px; height: auto; border-radius: 50%; }
+.site-title { font-family: var(--display); font-size: 30px; font-weight: 700; line-height: 1.1;
+              color: var(--text); margin: 0; }
+.site-description { color: var(--accent); font-weight: 700; font-size: 15px; margin: 2px 0 0; }
+.spacer { flex: 1; }
+
+.site-social { display: flex; gap: 14px; align-items: center; }
+.site-social a { color: var(--text); font-size: 15px; }
+.site-social a:hover { color: var(--accent); }
+
+/* the menu bar under the header */
+.site-nav { background: var(--bar); border-bottom: 1px solid var(--line); }
+.site-nav .menu { list-style: none; display: flex; flex-wrap: wrap; gap: 4px; margin: 0; padding: 0; }
+.site-nav .menu a {
+    display: block; padding: 14px 16px; color: var(--text);
+    font-family: var(--display); font-weight: 700; font-size: 17px; letter-spacing: .02em;
+}
+.site-nav .menu a:hover { color: var(--accent); background: var(--sunken); }
+/* dpress renders a submenu as a nested list; flattening it beats a hover menu with no JS */
+.site-nav .menu .menu { display: none; }
+
+/* --- the two columns ---------------------------------------------------------------------- */
+
+.site-content { padding: 50px 0; }
+body.home .site-content { padding-top: 0; }
+
+.content-area { display: block; }
+.primary { min-width: 0; }
+
+@media (min-width: 768px) {
+    .content-area { display: flex; flex-wrap: wrap; }
+    .primary { width: 70.3125%; }
+    .sidebar { width: 29.6875%; padding-left: var(--gap); }
+}
+@media (max-width: 767px) {
+    .sidebar { margin-top: 50px; }
+}
+
+/* --- the featured strip, front page only -------------------------------------------------- */
+
+.featured { display: grid; gap: 20px; margin: 0 0 50px; padding-top: 50px; }
+
+@media (min-width: 1025px) {
+    .featured { grid-template-columns: 2fr 1fr; }
+    /* one featured post is a banner, not a two column grid with a hole in it */
+    .featured-solo { grid-template-columns: 1fr; }
+    .featured-rest { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+}
+/* below 1025px the strip is the front page's first card and nothing more - the small ones would
+ * be four unreadable thumbnails in a row, which is what the original hides them for */
+@media (max-width: 1024px) { .featured-rest { display: none; } }
+
+.featured-lead { position: relative; display: block; overflow: hidden; border-radius: var(--radius); }
+.featured-lead img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.featured-lead .featured-details {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, .75); padding: 30px;
+}
+.featured-lead h2 { font-size: 32px; margin: 0 0 8px; color: var(--heading); }
+.featured-lead .meta { margin: 0; }
+
+.featured-small { display: block; }
+.featured-small img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover;
+                      display: block; border-radius: var(--radius); }
+.featured-small h3 { font-size: 17px; margin: 10px 0 0; color: var(--link); }
+.featured-small:hover h3 { color: var(--accent); }
+
+/* --- the list of posts -------------------------------------------------------------------- */
+
+.post-summary { margin-bottom: var(--gap); }
+.post-summary::after { content: ""; display: block; clear: both; }
+.post-summary h2 { font-size: 26px; margin: 0 0 10px; }
+.post-summary h2 a { color: var(--link); }
+.post-summary h2 a:hover { color: var(--accent); }
+.post-summary .post-thumbnail { display: block; margin-bottom: 16px; }
+.post-summary .post-thumbnail img { width: 100%; border-radius: var(--radius); display: block; }
+
+@media (min-width: 1025px) {
+    /* the picture beside the words rather than above them, which is the front page's whole shape */
+    .post-summary .post-thumbnail { float: left; width: auto; margin: 0 20px 10px 0; }
+    .post-summary .post-thumbnail img { width: auto; max-width: 394px; }
+}
+
+.meta { color: var(--dim); font-size: 15px; margin: 0 0 12px; }
+.meta a { color: var(--dim); }
+.meta a:hover { color: var(--accent); }
+
+.cat-links { margin: 0 0 12px; }
+.cat-links a {
+    display: inline-block; background: var(--sunken); color: var(--text);
+    font-size: 14px; padding: 4px 11px; border-radius: var(--radius); margin: 0 4px 4px 0;
+}
+.cat-links a:hover { color: var(--accent); }
+
+/* --- a post being read -------------------------------------------------------------------- */
+
+.entry-title { font-size: 35px; margin: 0 0 12px; }
+
+.entry-content {
+    background: var(--surface); color: var(--text);
+    font-size: 17px; line-height: 1.7;
+    padding: 30px; border-radius: var(--radius);
+}
+.entry-content > :first-child { margin-top: 0; }
+.entry-content > :last-child { margin-bottom: 0; }
+.entry-content h2 { font-size: 24px; }
+.entry-content h3 { font-size: 20px; }
+.entry-content a { color: var(--link); }
+.entry-content a:hover { color: var(--accent); text-decoration: underline; }
+.entry-content img { border-radius: var(--radius); }
+.entry-content figure { margin: 1.6em 0; text-align: center; }
+.entry-content figcaption { color: var(--dim); font-size: 15px; margin-top: 8px; }
+
+.entry-content code {
+    background: var(--sunken); color: var(--text);
+    font-family: var(--mono); font-size: .95em;
+    padding: .25em; border-radius: var(--radius);
+}
+/* a fenced block already has a background from the highlighter, so it must not get a second one */
+.entry-content pre { overflow-x: auto; border-radius: var(--radius); }
+.entry-content pre code { background: none; padding: 0; }
+
+.entry-content blockquote {
+    margin: 1.6em 0; padding: .5em 0 .5em 1.2em;
+    border-left: 4px solid var(--rule); color: var(--dim);
+}
+
+.entry-content table { width: 100%; border-collapse: collapse; margin: 1.6em 0; display: block;
+                       overflow-x: auto; }
+.entry-content th, .entry-content td { border: 0; padding: 8px 12px; text-align: left; }
+.entry-content thead th { color: var(--heading); font-family: var(--display); }
+.entry-content tbody tr:nth-child(odd) { background: var(--sunken); }
+
+/* --- callouts ----------------------------------------------------------------------------- */
+/* `> [!WARNING]` in the markdown. The site drew these by hand as `.gopherlab-panel`; dpress
+ * renders them itself now, so what was markup in the document is a class here. */
+
+.entry-content .callout {
+    padding: 12px 16px; border-radius: 8px; margin: 1.6em 0;
+    border-left: 8px solid var(--rule); background: var(--sunken);
+}
+.entry-content .callout > :first-child { margin-top: 0; }
+.entry-content .callout > :last-child { margin-bottom: 0; }
+.entry-content .callout-info    { background: #05333d; color: var(--cyan);    border-left-color: #3091a6; }
+.entry-content .callout-warning { background: #3b2206; color: var(--heading); border-left-color: #b56107; }
+.entry-content .callout-danger  { background: #3d0d0d; color: var(--red);     border-left-color: #a63030; }
+.entry-content .callout a { color: inherit; text-decoration: underline; }
+
+/* --- pages within a post ------------------------------------------------------------------ */
+
+.page-nav { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 30px 0 0; }
+.page-numbers { display: flex; flex-wrap: wrap; gap: 6px; }
+.page-number {
+    display: inline-block; min-width: 40px; text-align: center;
+    padding: 8px 14px; background: var(--sunken); color: var(--link); border-radius: var(--radius);
+}
+.page-number:hover { background: var(--line); color: var(--accent); }
+.page-number.current { background: var(--accent); color: #10111a; font-weight: 700; }
+.page-prev, .page-next { padding: 8px 14px; background: var(--sunken); border-radius: var(--radius); }
+
+/* --- tags, attachments -------------------------------------------------------------------- */
+
+.tags { margin: 24px 0 0; }
+.tags .tag, .tags .tag:visited {
+    display: inline-block; background: #222; color: #fff;
+    font-size: 12px; padding: 4px 8px; border-radius: var(--radius); margin: 0 4px 4px 0;
+}
+.tags .tag:hover { background: var(--line); color: var(--accent); }
+
+.attachments { list-style: none; padding: 0; }
+.attachments li { display: flex; align-items: center; gap: 10px; padding: 5px 0; }
+.attachment-icon svg { width: 22px; height: 22px; color: var(--dim); display: block; }
+
+/* --- the sidebar -------------------------------------------------------------------------- */
+
+.sidebar .block { margin-bottom: 40px; }
+.sidebar .block-title {
+    color: var(--widget); font-family: var(--display); font-size: 21px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .02em;
+    border-bottom: 1px solid var(--rule); padding-bottom: 8px; margin: 0 0 20px;
+}
+.sidebar ul { list-style: none; margin: 0; padding: 0; }
+.sidebar li { padding: 5px 0; }
+.sidebar li ul { padding-left: 16px; }
+.sidebar a { color: var(--link); }
+.sidebar a:hover { color: var(--accent); }
+.sidebar .tag-cloud a, .sidebar .tag-cloud a:visited { color: var(--text); }
+.sidebar .tag-cloud a:hover { color: var(--accent); }
+
+/* --- footer ------------------------------------------------------------------------------- */
+
+.site-footer { background: var(--bar); border-top: 1px solid var(--line); color: #ccc;
+               margin-top: 60px; padding: 40px 0 0; }
+.footer-widgets { display: grid; gap: 40px; grid-template-columns: 1fr; }
+@media (min-width: 768px) { .footer-widgets { grid-template-columns: repeat(3, 1fr); } }
+.site-footer .block-title {
+    color: var(--widget); font-family: var(--display); font-size: 18px; font-weight: 700;
+    text-transform: uppercase; border-bottom: 1px solid var(--rule);
+    padding-bottom: 8px; margin: 0 0 16px;
+}
+.site-footer ul { list-style: none; margin: 0; padding: 0; }
+.site-footer li { padding: 4px 0; }
+.site-footer .menu { display: block; }
+.footer-bottom { border-top: 1px solid var(--line); margin-top: 40px; padding: 18px 0;
+                 font-size: 14px; color: var(--dim); display: flex; gap: 16px; align-items: center; }
+
+/* --- forms, for the account screens -------------------------------------------------------- */
+
+.form-field { margin-bottom: 16px; }
+.form-field label { display: block; font-size: 14px; font-weight: 700; margin-bottom: 5px; }
+input[type=text], input[type=password], input[type=email], textarea, select {
+    width: 100%; padding: 10px; font: inherit;
+    background: var(--line); color: #f8f8f2; border: 1px solid var(--rule);
+    border-radius: var(--radius);
+}
+.form-errors { border: 1px solid var(--red); background: #3d0d0d; color: var(--text);
+               padding: 10px 14px; list-style: none; border-radius: var(--radius); }
+button, button.primary, input[type=submit] {
+    background: var(--sunken); color: var(--text); border: 1px solid var(--line);
+    padding: 10px 20px; font: inherit; cursor: pointer; border-radius: var(--radius);
+}
+button:hover, button.primary:hover, input[type=submit]:hover {
+    background: var(--pink); color: #10111a; border-color: var(--pink);
+}
+
+.links { margin-top: 40px; }

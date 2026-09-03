@@ -186,8 +186,11 @@ echo "  cat   /news, /guides, /guides > /how-to
 $welcome = $content->findBySlug('welcome-to-dpress', false);
 if ($welcome !== null) {
     $taxonomy->setCategories($welcome->id, [$news->id]);
-    $taxonomy->setTags($welcome->id, ['dpress', 'markdown', 'getting started']);
-    echo "  tags  /welcome-to-dpress: dpress, markdown, getting started
+    // `featured` is what puts a post at the top of the front page - a tag, so featuring one is
+    // something an author already knows how to do, and un-featuring is removing it. Which tag is
+    // the `featured_tag` setting; this is its default.
+    $taxonomy->setTags($welcome->id, ['dpress', 'markdown', 'getting started', 'featured']);
+    echo "  tags  /welcome-to-dpress: dpress, markdown, getting started, featured
 ";
 }
 $note = $content->findBySlug('a-short-note', false);
@@ -223,6 +226,46 @@ if (is_dir($examples) && $welcome !== null) {
             $media->attach($welcome->id, $item->id);
         }
     }
+}
+
+// A picture on the other posts too, so a listing has cards rather than a wall of headings. The
+// welcome post already took the first one above; these take whatever else the library holds, and
+// a post that ends up with none is a post with no picture, which is a case a theme has to handle
+// anyway.
+$taken = [];
+foreach ($content->findAll([]) as $row) {
+    if ($row['featured_media_id'] !== null) {
+        $taken[(int)$row['featured_media_id']] = true;
+    }
+}
+$pictures = [];
+foreach ($media->findAll(['category' => Media::CATEGORY_IMAGE]) as $row) {
+    $item = $media->findById((int)$row['id']);
+    // not one that is already somebody's picture: the same photo on two cards reads as a bug in
+    // the theme rather than as example data. `database/media` holds fewer pictures than there are
+    // posts, so some posts end up with none - which is a case a listing has to handle anyway.
+    if ($item !== null && $item->isResizable() && !isset($taken[$item->id])) {
+        $pictures[] = $item;
+    }
+}
+foreach ([$note, $accented, $about, $content->findBySlug('contact', false)] as $post) {
+    if ($post === null || $pictures === []) {
+        continue;
+    }
+    $fresh = $content->findById($post->id);
+    if ($fresh !== null && $fresh->featured_media_id === null) {
+        $content->update($fresh, ['featured_media_id' => array_shift($pictures)->id]);
+    }
+}
+
+// Something in the `footer` place, which a theme with a footer draws
+if ($blocks->inPlace('footer') === []) {
+    $blocks->create('category_list', ['title' => 'Categories', 'place' => 'footer',
+        'enabled' => true, 'settings' => []]);
+    $blocks->create('markdown', ['title' => 'Support', 'place' => 'footer', 'enabled' => true,
+        'settings' => ['markdown' => 'If this was useful, [buy me a coffee](https://ko-fi.com/).']]);
+    echo "  block footer: categories and a support note
+";
 }
 
 // The shortcode can only be written once the file it names has an id, so the placeholder left in

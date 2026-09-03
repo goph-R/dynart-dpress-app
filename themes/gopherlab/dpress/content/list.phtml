@@ -1,0 +1,64 @@
+<?php
+/**
+ * The front page and the archives
+ *
+ * One template for both, the way the CMS ships it: the front page is this plus `$featured_posts`, and
+ * a category or a tag is this with a heading on it.
+ *
+ * `$thumbnails` is keyed by content id and cost one query for the whole page.
+ */
+$this->useLayout($layout ?? 'dpress:layout');
+$featured_posts = $featured_posts ?? [];
+?>
+<?php if ($featured_posts !== []): ?>
+    <?php // into the layout's `featured` block rather than into `content`, because the strip is
+          // full width and the content is a 70% column ?>
+    <?php $this->startBlock('featured') ?>
+        <section class="featured<?= count($featured_posts) > 1 ? '' : ' featured-solo' ?>">
+            <?php $lead = $featured_posts[0] ?>
+            <a class="featured-lead" href="<?= esc_attr(route_url('/post/'.$lead['slug'])) ?>">
+                <?php if (isset($thumbnails[$lead['id']])): ?>
+                    <?= $mediaView->tag($thumbnails[$lead['id']], 'medium', ['alt' => '']) ?>
+                <?php endif ?>
+                <span class="featured-details">
+                    <h2><?= esc_html($lead['title']) ?></h2>
+                    <p class="meta"><?= esc_html(substr((string)$lead['published_at'], 0, 10)) ?></p>
+                </span>
+            </a>
+            <?php if (count($featured_posts) > 1): ?>
+                <div class="featured-rest">
+                    <?php foreach (array_slice($featured_posts, 1) as $post): ?>
+                        <a class="featured-small" href="<?= esc_attr(route_url('/post/'.$post['slug'])) ?>">
+                            <?php if (isset($thumbnails[$post['id']])): ?>
+                                <?= $mediaView->tag($thumbnails[$post['id']], 'thumb', ['alt' => '']) ?>
+                            <?php endif ?>
+                            <h3><?= esc_html($post['title']) ?></h3>
+                        </a>
+                    <?php endforeach ?>
+                </div>
+            <?php endif ?>
+        </section>
+    <?php $this->endBlock() ?>
+<?php endif ?>
+<?php $this->startBlock('content') ?>
+    <?php if (($heading ?? '') !== ''): ?>
+        <h1 class="entry-title"><?= esc_html($heading) ?></h1>
+    <?php endif ?>
+    <?php if (empty($posts)): ?>
+        <p>Nothing published yet.</p>
+    <?php else: ?>
+        <?php foreach ($posts as $post): ?>
+            <article class="post-summary">
+                <?php if (isset($thumbnails[$post['id']])): ?>
+                    <a class="post-thumbnail" tabindex="-1" aria-hidden="true"
+                       href="<?= esc_attr(route_url('/post/'.$post['slug'])) ?>"><?=
+                        $mediaView->tag($thumbnails[$post['id']], 'medium', ['alt' => ''])
+                    ?></a>
+                <?php endif ?>
+                <h2><a href="<?= esc_attr(route_url('/post/'.$post['slug'])) ?>"><?= esc_html($post['title']) ?></a></h2>
+                <p class="meta"><?= esc_html(substr((string)$post['published_at'], 0, 10)) ?></p>
+                <?= $post['lead_html'] ?>
+            </article>
+        <?php endforeach ?>
+    <?php endif ?>
+<?php $this->endBlock() ?>

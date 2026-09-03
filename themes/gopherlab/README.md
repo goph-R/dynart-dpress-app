@@ -1,0 +1,87 @@
+# gopherlab
+
+The gopherlab.net design, ported to dpress. Built from the running site — the colours and the type
+scale below are what the pages actually compute, read off the live CSS rather than matched by eye.
+
+```
+theme.ini                    five places: main, social, sidebar, home_top, footer
+assets/style.css             the whole design, served at /assets/theme/style.css
+dpress/layout.phtml          the reading column - a post, a page, an archive, the account screens
+dpress/layout-home.phtml     the front page: the same columns plus the featured strip
+dpress/content/list.phtml    the front page and the archives
+dpress/content/single.phtml  a post
+dpress/content/page.phtml    a page
+partial/head.phtml           what both layouts share above the fold
+partial/header.phtml         the brand, the social place, the menu bar
+partial/footer.phtml         three columns of the footer place, then the small print
+```
+
+## The palette
+
+Dracula, on a near-black page. Every value here was taken from the site's computed styles.
+
+| | | |
+|---|---|---|
+| page | `#0e0e1c` | behind everything |
+| bars | `#21222c` | header, menu, footer |
+| article | `#282a36` | Dracula's own background, where prose is read |
+| borders | `#44475a`, `#6272a4` | frames, and the rule under a widget title |
+| text | `#e2d9d9` | and `#7d7d7d` for meta |
+| headings | `#ffb86c` | Dracula orange |
+| links | `#00c6e0`, hover `#70d3e0` | |
+| widget titles | `#f1fa8c` | Dracula yellow, uppercase |
+
+Type: **Inter** for the body at 16px/1.5 and 17px/1.7 in an article, **Roboto Condensed** 700 for
+every heading. Neither font is shipped — the stacks in `:root` fall back to the system's condensed
+and UI faces. Drop `Inter.woff2` and `RobotoCondensed.woff2` into `assets/` and uncomment the
+`@font-face` block at the top of the stylesheet; they are served from the same URL as the
+stylesheet, so nothing else has to change.
+
+## The two layouts
+
+`layout-home.phtml` is the front page and `layout.phtml` is everything else. They share the same
+two columns — 70.3125% / 29.6875% from 768px, the original's proportions — and differ in one
+thing: the front page has the **featured strip** above them, full width.
+
+The strip is markup no other page has, which is what makes this two files rather than one file
+with an `if` in it. `content/list.phtml` fills a `featured` block and the home layout prints it
+above the columns, because the strip is wider than the column the content is in.
+
+**A category or a tag reads like a post**, which is a decision expressed by *not* writing
+`layout-archive.phtml`: with no file for that kind, the resolution falls back to `layout.phtml`.
+
+## The places
+
+| Place | Drawn by | For |
+|---|---|---|
+| `main` | both, in the bar under the header | the site's menu |
+| `social` | both, in the header | a menu of GitHub / YouTube / X links |
+| `sidebar` | both | recent posts, categories, a Ko-fi block |
+| `home_top` | **the front page only** | anything that belongs there and nowhere else |
+| `footer` | both, in three columns | categories, support, whatever else |
+
+`home_top` is the point worth knowing: a place only one layout renders is a place that only
+appears there. No visibility rule, nothing to configure.
+
+## Featured posts
+
+Tag a post `featured` and it goes to the top of the front page — one large card and up to four
+small ones — and is left out of the list below, because pinned *and* repeated four rows down reads
+as a bug. The tag is the `featured_tag` setting, so it can be renamed or emptied.
+
+Below 1025px the four small cards are hidden and the large one stands alone, which is what the
+original does.
+
+## What the original has and this does not
+
+Honest list, so nothing is a surprise later:
+
+- **Comments**, and the comment count on a card. That is the Disqus plugin — see
+  `docs/comments.md` in dpress.
+- **Post navigation** — the previous/next post links under an article. There is no query for the
+  adjacent post yet.
+- **The author's name** in the meta line. A listing row carries `author_id` and nothing resolves it
+  for a template; the date and the categories are there.
+- **Search**, which the original has in its menu bar.
+- The author bio box and the featured image on a single post are **deliberately** absent — the
+  original hides both in its own custom CSS.
