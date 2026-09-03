@@ -7,4 +7,17 @@
     <link rel="icon" href="<?= esc_attr($site_icon) ?>">
     <link rel="apple-touch-icon" href="<?= esc_attr($site_icon) ?>">
 <?php endif ?>
+<?php // The fonts, started now rather than when the stylesheet has been parsed and something has
+      // finally needed one. Without this the page paints in the fallback face and swaps a moment
+      // later, which is the flicker.
+      //
+      // `crossorigin` is required even though the file is on this very origin: a font is always
+      // fetched in CORS mode, and a preload without it is a *second*, unusable download.
+      //
+      // And no `?v=` - `false` - because the `url()` inside the stylesheet has none either, and
+      // two spellings of one file is two downloads with the preload matching neither. ?>
+<link rel="preload" as="font" type="font/woff2" crossorigin
+      href="<?= esc_attr($theme->url('roboto-condensed-latin.woff2', false)) ?>">
+<link rel="preload" as="font" type="font/woff2" crossorigin
+      href="<?= esc_attr($theme->url('roboto-condensed-latin-ext.woff2', false)) ?>">
 <link rel="stylesheet" href="<?= esc_attr($theme->url('style.css')) ?>">

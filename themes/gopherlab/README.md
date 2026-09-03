@@ -59,7 +59,21 @@ Roboto Condensed is **self-hosted**, two variable files covering 100–900 so ev
 comes out of one download. They sit in `assets/` and are served from the same URL as the
 stylesheet, which is why a bare `url(roboto-condensed-latin.woff2)` resolves. `latin-ext` carries
 the Hungarian ő and ű and has its own `unicode-range`, so a page without them never asks for that
-file; `font-display: swap` keeps a heading readable while the font arrives.
+file.
+
+**No flash of the fallback face.** Two things together: the fonts are `<link rel="preload">`ed in
+the head, so they start downloading with the stylesheet rather than after it has been parsed and
+something has finally needed one; and `font-display` is **`optional`** rather than `swap` —
+`swap` is what paints in the fallback and changes it a moment later. `optional` gives the font
+about 100ms and then commits for the whole page load, so nothing ever moves. The trade is that a
+genuinely slow first visit renders headings in the fallback for that page; after it, the font is
+cached for a year and always wins.
+
+Two details in the preload that look like noise and are not. `crossorigin` is required even
+though the file is on this very origin, because a font is always fetched in CORS mode and a
+preload without it is a second, unusable download. And the preload URL carries **no `?v=`** —
+`$theme->url($file, false)` — because the `url()` inside the stylesheet has none either, and two
+spellings of one file is two downloads with the preload matching neither.
 
 Inter is not shipped — the body falls back to the system UI face. It is the same two `@font-face`
 blocks whenever it is wanted.
