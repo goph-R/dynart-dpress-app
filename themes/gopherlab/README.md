@@ -32,6 +32,15 @@ Dracula, on a near-black page. Every value here was taken from the site's comput
 | links | `#00c6e0`, hover `#70d3e0` | |
 | widget titles | `#f1fa8c` | Dracula yellow, uppercase |
 
+**Nothing has a rounded corner.** `--radius` is `0` and is the only place that decides, so putting
+the softness back is one line. The chrome carries no rules either — a bar meeting the content area
+is the whole separation.
+
+The menu marks a hover with a **1px rule above the item**, not with a panel behind it; the border
+is there and transparent to begin with, so nothing shifts when it appears. A menu item with
+children opens a dropdown on hover **and on `:focus-within`**, which is what makes a CSS-only menu
+reachable from the keyboard.
+
 Type: **Inter** for the body at 16px/1.5 and 17px/1.7 in an article, **Roboto Condensed** 700 for
 every heading. Neither font is shipped — the stacks in `:root` fall back to the system's condensed
 and UI faces. Drop `Inter.woff2` and `RobotoCondensed.woff2` into `assets/` and uncomment the

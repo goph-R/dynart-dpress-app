@@ -18,10 +18,12 @@ $top = $places->render('home_top');
 </head>
 <body class="<?= esc_attr($layout_kind ?? '') ?>">
 <?= $this->fetch('theme:partial/header') ?>
-<?php if ($top !== ''): ?>
-    <div class="container"><?= $top ?></div>
-<?php endif ?>
 <div class="site-content">
+    <?php // inside the content area rather than above it, so a block put here sits on the same
+          // surface as everything else on the page instead of on the darker page behind it ?>
+    <?php if ($top !== ''): ?>
+        <div class="container home-top"><?= $top ?></div>
+    <?php endif ?>
     <div class="container">
         <?php // full width, above both columns. `content/list.phtml` fills this block and the
               // layout prints it - blocks accumulate across a render, so a template can hand the
