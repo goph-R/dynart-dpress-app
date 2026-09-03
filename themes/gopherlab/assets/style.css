@@ -115,7 +115,7 @@ img, video { max-width: 100%; height: auto; }
 .brand { display: flex; align-items: center; gap: 16px; color: var(--text); }
 .brand:hover { color: var(--text); }
 .brand img { width: 64px; height: auto; }
-.site-title { font-family: var(--display); font-size: 34px; font-weight: 700; line-height: 1.1;
+.site-title { font-family: var(--font); font-size: 34px; font-weight: 700; line-height: 1.1;
               color: var(--accent); margin: 0; display: block; }
 .site-description { color: var(--text); font-weight: 700; font-size: 14px; margin: 2px 0 0;
                     display: block; }
@@ -239,9 +239,11 @@ body.home .site-content { padding-top: 0; }
 .post-summary .post-thumbnail img { width: 100%; border-radius: var(--radius); display: block; }
 
 @media (min-width: 1025px) {
-    /* the picture beside the words rather than above them, which is the front page's whole shape */
-    .post-summary .post-thumbnail { float: left; width: auto; margin: 0 20px 10px 0; }
-    .post-summary .post-thumbnail img { width: auto; max-width: 394px; }
+    /* the picture beside the words rather than above them, which is the front page's whole shape.
+       40% of the column, as a proportion rather than a pixel width, so the balance holds at every
+       width instead of only at the one it happened to be measured on. */
+    .post-summary .post-thumbnail { float: left; width: 40%; margin: 0 24px 10px 0; }
+    .post-summary .post-thumbnail img { width: 100%; }
 }
 
 .meta { color: var(--dim); font-size: 15px; margin: 0 0 12px; }

@@ -48,7 +48,9 @@ children opens a dropdown on hover **and on `:focus-within`**, which is what mak
 reachable from the keyboard.
 
 Type: **Inter** for the body at 16px/1.5 and 17px/1.7 in an article, **Roboto Condensed** 700 for
-every heading.
+every heading — but **not** the site's name in the header, which takes the body face, as it does
+in the original. It read correctly by accident while Roboto Condensed was not loading and the
+headings stack fell through to the system UI face.
 
 Roboto Condensed is **self-hosted**, two variable files covering 100–900 so every heading weight
 comes out of one download. They sit in `assets/` and are served from the same URL as the
