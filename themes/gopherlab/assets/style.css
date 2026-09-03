@@ -142,18 +142,29 @@ body.home .site-content { padding-top: 0; }
 
 .featured-lead { position: relative; display: block; overflow: hidden; border-radius: var(--radius); }
 .featured-lead img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* No picture is the ordinary case, not the exception: a post need not have one, and the one it
+   had can be put in the bin at any time. So the title sits in a panel of its own by default and
+   moves *onto* the picture only when there is one - an overlay with nothing under it is a card
+   with no height, which is a post that has silently vanished from the front page. */
 .featured-lead .featured-details {
+    display: block; background: var(--sunken); padding: 24px; border-radius: var(--radius);
+}
+.featured-lead.has-image .featured-details {
     position: absolute; left: 0; right: 0; bottom: 0;
-    background: rgba(0, 0, 0, .75); padding: 30px;
+    background: rgba(0, 0, 0, .75); padding: 30px; border-radius: 0;
 }
 /* white over the picture rather than orange: the overlay is already dark, and the heading colour
-   that reads on the page does not read on a photograph */
-.featured-lead h2 { font-size: 32px; margin: 0 0 8px; color: #fff; }
-.featured-lead .meta { margin: 0; color: #cfcfcf; }
+   that reads on the page does not read on a photograph. On the panel it is a heading again. */
+.featured-lead h2 { font-size: 32px; margin: 0 0 8px; color: var(--heading); }
+.featured-lead.has-image h2 { color: #fff; }
+.featured-lead .meta { margin: 0; }
+.featured-lead.has-image .meta { color: #cfcfcf; }
 
 /* a row each: thumbnail, then title and date - stacked down the sidebar's width */
-.featured-small { display: grid; grid-template-columns: 120px 1fr; gap: 16px;
+.featured-small { display: grid; grid-template-columns: 1fr; gap: 16px;
                   align-items: start; margin-bottom: 24px; }
+.featured-small.has-image { grid-template-columns: 120px 1fr; }
 .featured-small img { width: 120px; height: 80px; object-fit: cover;
                       display: block; border-radius: var(--radius); }
 .featured-small h3 { font-size: 16px; margin: 0 0 6px; color: var(--text); line-height: 1.35; }

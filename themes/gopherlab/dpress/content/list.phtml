@@ -16,7 +16,11 @@ $featured_posts = $featured_posts ?? [];
     <?php $this->startBlock('featured') ?>
         <section class="featured<?= count($featured_posts) > 1 ? '' : ' featured-solo' ?>">
             <?php $lead = $featured_posts[0] ?>
-            <a class="featured-lead" href="<?= esc_attr(route_url('/post/'.$lead['slug'])) ?>">
+            <?php // `has-image` decides where the title goes: over the picture when there is one,
+                  // and in a panel of its own when there is not. A post need not have a picture,
+                  // and an overlay with nothing under it is a card with no height at all. ?>
+            <a class="featured-lead<?= isset($thumbnails[$lead['id']]) ? ' has-image' : '' ?>"
+               href="<?= esc_attr(route_url('/post/'.$lead['slug'])) ?>">
                 <?php if (isset($thumbnails[$lead['id']])): ?>
                     <?= $mediaView->tag($thumbnails[$lead['id']], 'medium', ['alt' => '']) ?>
                 <?php endif ?>
@@ -28,11 +32,10 @@ $featured_posts = $featured_posts ?? [];
             <?php if (count($featured_posts) > 1): ?>
                 <div class="featured-rest">
                     <?php foreach (array_slice($featured_posts, 1) as $post): ?>
-                        <a class="featured-small" href="<?= esc_attr(route_url('/post/'.$post['slug'])) ?>">
+                        <a class="featured-small<?= isset($thumbnails[$post['id']]) ? ' has-image' : '' ?>"
+                           href="<?= esc_attr(route_url('/post/'.$post['slug'])) ?>">
                             <?php if (isset($thumbnails[$post['id']])): ?>
                                 <?= $mediaView->tag($thumbnails[$post['id']], 'thumb', ['alt' => '']) ?>
-                            <?php else: ?>
-                                <span></span>
                             <?php endif ?>
                             <span>
                                 <h3><?= esc_html($post['title']) ?></h3>

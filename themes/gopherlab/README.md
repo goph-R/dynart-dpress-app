@@ -83,6 +83,17 @@ as a bug. The tag is the `featured_tag` setting, so it can be renamed or emptied
 Below 1025px the four small cards are hidden and the large one stands alone, which is what the
 original does.
 
+**A featured post need not have a picture.** The large card puts its title *over* the image, so
+with no image it puts it in a panel of its own instead — `has-image` on the card decides which,
+and without it an absolutely positioned overlay would leave a card with no height, which is a post
+that has silently vanished from the front page. The same for the small cards: no picture, no
+thumbnail column.
+
+A post whose picture is in the **media bin** counts as having none. `MediaService::findByIds()`
+skips soft-deleted items, the same rule the site logo follows — something somebody put in the bin
+should leave the page rather than wait for a purge. Restore it from the media screen and the card
+takes its picture back.
+
 ## What the original has and this does not
 
 Honest list, so nothing is a surprise later:
