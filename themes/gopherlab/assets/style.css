@@ -32,6 +32,7 @@
 
     /* metrics */
     --container: 1280px;
+    --pad:       32px;   /* between the boxed edge and the content inside it */
     --radius:    0;      /* squared: nothing in this design has a rounded corner */
     --gap:       50px;
 
@@ -73,14 +74,26 @@ img, video { max-width: 100%; height: auto; }
 /* an iframe has no intrinsic shape, so it needs one told to it rather than kept */
 .dpress-embed { width: 100%; aspect-ratio: 16 / 9; height: auto; border: 0; display: block; }
 
-.container { width: var(--container); max-width: 95%; margin: 0 auto; }
+/* The site is a box, 1280px at most, centred - so on a wide screen the page colour shows down
+   both sides and the header, the menu, the content and the footer all end at the same edge. The
+   bars are capped too rather than bleeding to the viewport: a full width bar over a boxed body is
+   the shape this design is not. */
+.site-header, .site-nav, .site-content, .site-footer {
+    max-width: var(--container); margin-left: auto; margin-right: auto;
+}
+/* inside the box, the inset is padding rather than a second width - one thing decides how wide
+   the site is, and it is `--container` */
+.container { width: 100%; margin: 0 auto; padding-left: var(--pad); padding-right: var(--pad); }
+
+@media (max-width: 700px) { :root { --pad: 16px; } }
 
 /* --- header ------------------------------------------------------------------------------- */
 
 /* no rules anywhere in the chrome: one surface meeting another is the whole separation, and a
    1px line across it is a seam the original deliberately takes out */
 .site-header { background: var(--bar); }
-.header-inner { display: flex; align-items: center; gap: 18px; padding: 18px 0; }
+.header-inner { display: flex; align-items: center; gap: 18px;
+                padding-top: 18px; padding-bottom: 18px; }
 
 .brand { display: flex; align-items: center; gap: 16px; color: var(--text); }
 .brand:hover { color: var(--text); }
@@ -97,6 +110,9 @@ img, video { max-width: 100%; height: auto; }
 
 /* the menu bar under the header */
 .site-nav { background: var(--bar); }
+/* the menu items carry 16px of their own, so the bar's container gives that much less - which
+   puts the first item's *text* on the same left edge as the content underneath it */
+.site-nav .container { padding-left: calc(var(--pad) - 16px); padding-right: calc(var(--pad) - 16px); }
 .site-nav .menu { list-style: none; display: flex; flex-wrap: wrap; gap: 4px; margin: 0; padding: 0; }
 .site-nav .menu > li { position: relative; }
 .site-nav .menu a {
@@ -146,7 +162,7 @@ body.home .site-content { padding-top: 0; }
 .featured { display: grid; gap: 20px; margin: 0 0 50px; padding-top: 0; }
 /* a block in `home_top` is the one thing that legitimately goes above the picture, so it brings
    its own spacing rather than the strip carrying padding for a place that is usually empty */
-.home-top { padding: 30px 0; }
+.home-top { padding-top: 30px; padding-bottom: 30px; }
 
 /* 60/40, which is **not** the 70/30 of the columns under it: the big card is a picture and wants
    less width than a column of prose, and the four small ones want more than a sidebar. Their text

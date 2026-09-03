@@ -32,6 +32,12 @@ Dracula, on a near-black page. Every value here was taken from the site's comput
 | links | `#00c6e0`, hover `#70d3e0` | |
 | widget titles | `#f1fa8c` | Dracula yellow, uppercase |
 
+**The site is a box.** `--container` (1280px) caps the header, the menu bar, the content area and
+the footer alike, all centred — so on a wide screen the page colour shows down both sides and
+every band ends on the same edge. The bars are capped rather than bleeding to the viewport: a
+full-width bar over a boxed body is the shape this design is not. Inside the box the inset is
+`--pad` (32px, 16px on a phone) as padding, so one value decides how wide the site is.
+
 **Nothing has a rounded corner.** `--radius` is `0` and is the only place that decides, so putting
 the softness back is one line. The chrome carries no rules either — a bar meeting the content area
 is the whole separation.
