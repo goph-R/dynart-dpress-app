@@ -31,8 +31,13 @@ $featured_posts = $featured_posts ?? [];
                         <a class="featured-small" href="<?= esc_attr(route_url('/post/'.$post['slug'])) ?>">
                             <?php if (isset($thumbnails[$post['id']])): ?>
                                 <?= $mediaView->tag($thumbnails[$post['id']], 'thumb', ['alt' => '']) ?>
+                            <?php else: ?>
+                                <span></span>
                             <?php endif ?>
-                            <h3><?= esc_html($post['title']) ?></h3>
+                            <span>
+                                <h3><?= esc_html($post['title']) ?></h3>
+                                <span class="meta"><?= esc_html(substr((string)$post['published_at'], 0, 10)) ?></span>
+                            </span>
                         </a>
                     <?php endforeach ?>
                 </div>

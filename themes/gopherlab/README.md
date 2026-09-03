@@ -1,7 +1,8 @@
 # gopherlab
 
 The gopherlab.net design, ported to dpress. Built from the running site — the colours and the type
-scale below are what the pages actually compute, read off the live CSS rather than matched by eye.
+scale below are what the pages actually compute, read off the live CSS rather than matched by eye,
+then checked against full-page screenshots of the front page and a post.
 
 ```
 theme.ini                    five places: main, social, sidebar, home_top, footer
@@ -24,7 +25,7 @@ Dracula, on a near-black page. Every value here was taken from the site's comput
 |---|---|---|
 | page | `#0e0e1c` | behind everything |
 | bars | `#21222c` | header, menu, footer |
-| article | `#282a36` | Dracula's own background, where prose is read |
+| content area | `#282a36` | Dracula's own background - the whole two-column region, not a card |
 | borders | `#44475a`, `#6272a4` | frames, and the rule under a widget title |
 | text | `#e2d9d9` | and `#7d7d7d` for meta |
 | headings | `#ffb86c` | Dracula orange |
@@ -41,11 +42,17 @@ stylesheet, so nothing else has to change.
 
 `layout-home.phtml` is the front page and `layout.phtml` is everything else. They share the same
 two columns — 70.3125% / 29.6875% from 768px, the original's proportions — and differ in one
-thing: the front page has the **featured strip** above them, full width.
+thing: the front page has the **featured strip** on top of them.
 
 The strip is markup no other page has, which is what makes this two files rather than one file
 with an `if` in it. `content/list.phtml` fills a `featured` block and the home layout prints it
-above the columns, because the strip is wider than the column the content is in.
+above the columns, because the strip is wider than the column the content is in — and it carries
+**the same 70/30 split**, so the large card lines up with the article column and the four small
+ones line up with the sidebar. It is the top of both columns rather than a band across them.
+
+The surface is worth knowing: `#282a36` is on the **whole content area**, not on the article. So a
+post is text on the page it belongs to rather than a card floating on a background, and a listing
+sits on the same surface as the sidebar beside it.
 
 **A category or a tag reads like a post**, which is a decision expressed by *not* writing
 `layout-archive.phtml`: with no file for that kind, the resolution falls back to `layout.phtml`.
@@ -58,10 +65,14 @@ above the columns, because the strip is wider than the column the content is in.
 | `social` | both, in the header | a menu of GitHub / YouTube / X links |
 | `sidebar` | both | recent posts, categories, a Ko-fi block |
 | `home_top` | **the front page only** | anything that belongs there and nowhere else |
-| `footer` | both, in three columns | categories, support, whatever else |
+| `footer` | both, in three columns above the copyright bar | categories, support, whatever else |
 
 `home_top` is the point worth knowing: a place only one layout renders is a place that only
 appears there. No visibility rule, nothing to configure.
+
+The original's footer is a single copyright bar — its theme has a widget area and the site leaves
+it empty. Here the three columns render only when the `footer` place has something in it, so an
+empty place gives you the original's bar exactly.
 
 ## Featured posts
 
