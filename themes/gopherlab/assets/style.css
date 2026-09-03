@@ -127,6 +127,15 @@ img, video { max-width: 100%; height: auto; }
                     display: block; }
 .spacer { flex: 1; }
 
+/* the logout is a form so that it can be a POST, and a form in a header should still look like
+   the links beside it rather than like a button dropped into the middle of them */
+.header-inner .logout { margin: 0; }
+.header-inner .logout button {
+    background: none; border: 0; padding: 0; margin: 0;
+    font: inherit; color: var(--link); cursor: pointer;
+}
+.header-inner .logout button:hover { background: none; color: var(--accent); }
+
 .site-social { display: flex; gap: 14px; align-items: center; }
 .site-social .menu { list-style: none; display: flex; gap: 16px; align-items: center; margin: 0; padding: 0; }
 .site-social a { color: var(--text); font-size: 15px; display: flex; align-items: center; }

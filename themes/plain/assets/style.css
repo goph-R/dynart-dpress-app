@@ -12,6 +12,10 @@ header { border-bottom: 3px double var(--rule); padding: 22px 20px; }
 .bar a { color: var(--ink); text-decoration: none; }
 .bar .site { font-size: 22px; font-weight: 700; letter-spacing: -.5px; }
 .spacer { flex: 1; }
+/* the logout is a form so it can be a POST; in a header bar it should read as a link */
+.bar .logout { margin: 0; }
+.bar .logout button { background: none; border: 0; padding: 0; font: inherit;
+                      color: var(--link); cursor: pointer; }
 .menu { list-style: none; display: flex; gap: 14px; margin: 0; padding: 0; }
 .menu .menu { display: none; }
 

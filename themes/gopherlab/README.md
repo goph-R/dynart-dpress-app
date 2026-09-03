@@ -155,6 +155,14 @@ skips soft-deleted items, the same rule the site logo follows — something some
 should leave the page rather than wait for a purge. Restore it from the media screen and the card
 takes its picture back.
 
+## Signing in and out
+
+The header shows the account name and **Log out** when somebody is signed in, and *Log in* (plus
+*Register*, when registration is open) when nobody is. The logout is a `<form method="post">` and
+not a link, because `/logout` is POST only: a link that ends a session can be followed by a
+prefetcher, a crawler, or an `<img>` somebody planted on another page, and the visitor is simply
+signed out. It is styled to read as a link so the header does not gain a button.
+
 ## What the original has and this does not
 
 Honest list, so nothing is a surprise later:

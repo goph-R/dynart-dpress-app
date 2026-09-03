@@ -8,8 +8,16 @@
             <span class="spacer"></span>
             <?php if (!empty($current_user)): ?>
                 <a href="<?= esc_attr(route_url('/profile')) ?>"><?= esc_html($current_user->name() ?: 'Profile') ?></a>
+                <?php // a form and not a link: `/logout` is POST only, so that a link ending a
+                      // session cannot be followed by a prefetcher or an `<img>` on another page ?>
+                <form class="logout" method="post" action="<?= esc_attr(route_url('/logout')) ?>">
+                    <button type="submit">Log out</button>
+                </form>
             <?php else: ?>
                 <a href="<?= esc_attr(route_url('/login')) ?>">Log in</a>
+                <?php if (!empty($registration_open)): ?>
+                    <a href="<?= esc_attr(route_url('/register')) ?>">Register</a>
+                <?php endif ?>
             <?php endif ?>
         </div>
     </header>

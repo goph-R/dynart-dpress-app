@@ -18,8 +18,17 @@
         <div class="site-social"><?= $places->render('social') ?></div>
         <?php if (!empty($current_user)): ?>
             <a href="<?= esc_attr(route_url('/profile')) ?>"><?= esc_html($current_user->name() ?: 'Profile') ?></a>
+            <?php // a form and not a link, because `/logout` is POST only: a link that ends a
+                  // session can be followed by a prefetcher, a crawler or an `<img>` somebody
+                  // planted on another page, and the visitor is simply signed out ?>
+            <form class="logout" method="post" action="<?= esc_attr(route_url('/logout')) ?>">
+                <button type="submit">Log out</button>
+            </form>
         <?php else: ?>
             <a href="<?= esc_attr(route_url('/login')) ?>">Log in</a>
+            <?php if (!empty($registration_open)): ?>
+                <a href="<?= esc_attr(route_url('/register')) ?>">Register</a>
+            <?php endif ?>
         <?php endif ?>
     </div>
 </header>
