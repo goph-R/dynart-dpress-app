@@ -134,7 +134,8 @@ img, video { max-width: 100%; height: auto; }
 .site-nav .menu > li { position: relative; }
 .site-nav .menu a {
     display: block; padding: 16px 16px; color: var(--link);
-    font-family: var(--display); font-weight: 700; font-size: 17px; letter-spacing: .02em;
+    /* the body face: the original sets no family on its menu at all, so it inherits one */
+    font-family: var(--font); font-weight: 700; font-size: 17px; letter-spacing: .02em;
     /* transparent to begin with, so appearing on hover moves nothing */
     border-top: 1px solid transparent;
 }
