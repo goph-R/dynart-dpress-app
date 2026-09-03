@@ -287,6 +287,17 @@ if ($blocks->inPlace('sidebar') === []) {
 ";
 }
 
+// A place the front page renders and nothing else does - which is the whole of "this block only
+// shows on the home page", with no visibility rule anywhere. The `plain` theme draws `home_top`
+// in `layout-home.phtml` and never mentions it in `layout.phtml`.
+if ($blocks->inPlace('home_top') === []) {
+    $blocks->create('markdown', ['title' => '', 'place' => 'home_top', 'enabled' => true,
+        'settings' => ['markdown' => "Welcome. This block sits in `home_top`, a place only the "
+            ."front page's layout renders, so it is on this page and on no other."]]);
+    echo "  block home_top: a welcome note the front page alone shows
+";
+}
+
 // --- A second revision, so the history has something in it --------------------------------
 
 $welcome = $content->findBySlug('welcome-to-dpress', false);
