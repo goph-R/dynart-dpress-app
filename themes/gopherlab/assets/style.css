@@ -77,7 +77,9 @@ img, video { max-width: 100%; height: auto; }
 
 /* --- header ------------------------------------------------------------------------------- */
 
-.site-header { background: var(--bar); border-bottom: 1px solid var(--line); }
+/* no rules anywhere in the chrome: one surface meeting another is the whole separation, and a
+   1px line across it is a seam the original deliberately takes out */
+.site-header { background: var(--bar); }
 .header-inner { display: flex; align-items: center; gap: 18px; padding: 18px 0; }
 
 .brand { display: flex; align-items: center; gap: 16px; color: var(--text); }
@@ -94,7 +96,7 @@ img, video { max-width: 100%; height: auto; }
 .site-social a:hover { color: var(--accent); }
 
 /* the menu bar under the header */
-.site-nav { background: var(--bar); border-bottom: 1px solid var(--line); }
+.site-nav { background: var(--bar); }
 .site-nav .menu { list-style: none; display: flex; flex-wrap: wrap; gap: 4px; margin: 0; padding: 0; }
 .site-nav .menu a {
     display: block; padding: 16px 16px; color: var(--link);
@@ -128,10 +130,11 @@ body.home .site-content { padding-top: 0; }
 
 .featured { display: grid; gap: 20px; margin: 0 0 50px; padding-top: 40px; }
 
-/* the same 70/30 as the columns under it, so the big card lines up with the article column and
-   the small ones line up with the sidebar - the strip is the top of both, not a band above them */
+/* 60/40, which is **not** the 70/30 of the columns under it: the big card is a picture and wants
+   less width than a column of prose, and the four small ones want more than a sidebar. Their text
+   still lands on the sidebar's left edge; the thumbnails sit out to the left of it. */
 @media (min-width: 1025px) {
-    .featured { grid-template-columns: 70.3125% 29.6875%; gap: 0; }
+    .featured { grid-template-columns: 60% 40%; gap: 0; }
     .featured-rest { padding-left: var(--gap); }
     /* one featured post is a banner, not a two column grid with a hole in it */
     .featured-solo { grid-template-columns: 1fr; }
@@ -294,8 +297,7 @@ body.home .site-content { padding-top: 0; }
 
 /* the original's footer is one bar - a widget area is there if a site fills it, and this site
    does not, so with an empty `footer` place the bar is all that renders */
-.site-footer { background: var(--bar); border-top: 1px solid var(--line); color: #ccc;
-               padding: 0; }
+.site-footer { background: var(--bar); color: #ccc; padding: 0; }
 .site-footer .footer-widgets { padding-top: 40px; }
 .footer-widgets { display: grid; gap: 40px; grid-template-columns: 1fr; }
 @media (min-width: 768px) { .footer-widgets { grid-template-columns: repeat(3, 1fr); } }
@@ -309,7 +311,7 @@ body.home .site-content { padding-top: 0; }
 .site-footer .menu { display: block; }
 .footer-bottom { padding: 22px 0; font-size: 14px; color: #ccc;
                  display: flex; gap: 16px; align-items: center; }
-.footer-widgets + .footer-bottom { border-top: 1px solid var(--line); margin-top: 40px; }
+.footer-widgets + .footer-bottom { margin-top: 40px; }
 
 /* --- forms, for the account screens -------------------------------------------------------- */
 

@@ -24,7 +24,7 @@ Dracula, on a near-black page. Every value here was taken from the site's comput
 | | | |
 |---|---|---|
 | page | `#0e0e1c` | behind everything |
-| bars | `#21222c` | header, menu, footer |
+| bars | `#21222c` | header, menu, footer — and **no rules between them**, the colour change is the whole separation |
 | content area | `#282a36` | Dracula's own background - the whole two-column region, not a card |
 | borders | `#44475a`, `#6272a4` | frames, and the rule under a widget title |
 | text | `#e2d9d9` | and `#7d7d7d` for meta |
@@ -46,9 +46,12 @@ thing: the front page has the **featured strip** on top of them.
 
 The strip is markup no other page has, which is what makes this two files rather than one file
 with an `if` in it. `content/list.phtml` fills a `featured` block and the home layout prints it
-above the columns, because the strip is wider than the column the content is in — and it carries
-**the same 70/30 split**, so the large card lines up with the article column and the four small
-ones line up with the sidebar. It is the top of both columns rather than a band across them.
+above the columns, because the strip is wider than the column the content is in.
+
+Its split is **60/40, deliberately not the 70/30 of the columns under it**: the large card is a
+picture and wants less width than a column of prose, and the four small ones want more than a
+sidebar. Their text still lands on the sidebar's left edge — the thumbnails sit out to the left
+of it, which is what the original does.
 
 The surface is worth knowing: `#282a36` is on the **whole content area**, not on the article. So a
 post is text on the page it belongs to rather than a card floating on a background, and a listing
