@@ -184,6 +184,13 @@ not a link, because `/logout` is POST only: a link that ends a session can be fo
 prefetcher, a crawler, or an `<img>` somebody planted on another page, and the visitor is simply
 signed out. It is styled to read as a link so the header does not gain a button.
 
+## Previews
+
+`content/single.phtml` and `content/page.phtml` each begin with one line that draws the CMS's
+preview bar. The editor's **Preview** button renders the unsaved boxes through this theme, so
+without that line a preview would look exactly like the live page — a good way to publish
+something by accident. It draws nothing on a normal page view.
+
 ## What the original has and this does not
 
 Honest list, so nothing is a surprise later:
