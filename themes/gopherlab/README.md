@@ -155,6 +155,27 @@ skips soft-deleted items, the same rule the site logo follows — something some
 should leave the page rather than wait for a purge. Restore it from the media screen and the card
 takes its picture back.
 
+## The list of posts
+
+A card is the picture and the words in **two columns, 40% and the rest**, above 1025px; below
+that the picture sits on top. A post with no picture gives the words the whole width rather
+than an empty column — `has-image` on the card decides, the same way the featured cards do.
+
+**The lead is cut off by the stylesheet, not by the server.** Four lines, and the browser writes
+the `…` itself at the exact point the text stops fitting, which no server-side count of
+characters can do — a line of prose is not a fixed number of them. Two reasons it has to be the
+stylesheet: `lead_html` is HTML, so counting through it would take a tag off mid-word; and a post
+written with **no `---` separator is all lead**, so without a limit the front page prints whole
+articles. To show more or less of each post, change `-webkit-line-clamp` on `.post-lead`.
+
+**Read more is always there**, whether or not the lead was cut. Somebody who has read the whole
+lead still needs the way in, and it is not obvious to everybody that the title is a link. It
+carries the post title in an `.sr-only` span, because a page of links that all read "Read more"
+tells a screen reader nothing about where any of them goes.
+
+> The original does this the other way round — WordPress cuts the excerpt at a word count and
+> puts *Read more* inline after the `…`, and shows neither when the excerpt was short enough.
+
 ## Signing in and out
 
 The header shows the account name and **Log out** when somebody is signed in, and *Log in* (plus
@@ -171,8 +192,6 @@ Honest list, so nothing is a surprise later:
   `docs/comments.md` in dpress.
 - **Post navigation** — the previous/next post links under an article. There is no query for the
   adjacent post yet.
-- **The author's name** in the meta line. A listing row carries `author_id` and nothing resolves it
-  for a template; the date and the categories are there.
 - **Search**, which the original has in its menu bar.
 - The author bio box and the featured image on a single post are **deliberately** absent — the
   original hides both in its own custom CSS.
