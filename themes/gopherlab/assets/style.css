@@ -343,6 +343,12 @@ body.home .site-content { padding-top: 0; }
 .entry-content th, .entry-content td { border: 0; padding: 8px 12px; text-align: left; }
 .entry-content thead th { color: var(--heading); font-family: var(--display); }
 .entry-content tbody tr:nth-child(odd) { background: var(--sunken); }
+/* the column alignment a table says with `|---:|`. The renderer writes it as an attribute, and
+   a stylesheet that sets `text-align` on every cell without answering it silently throws away
+   what the author asked for. */
+.entry-content th[align='right'], .entry-content td[align='right'] { text-align: right; }
+.entry-content th[align='center'], .entry-content td[align='center'] { text-align: center; }
+
 
 /* --- callouts ----------------------------------------------------------------------------- */
 /* `> [!WARNING]` in the markdown. The site drew these by hand as `.gopherlab-panel`; dpress
