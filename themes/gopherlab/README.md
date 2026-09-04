@@ -184,6 +184,26 @@ not a link, because `/logout` is POST only: a link that ends a session can be fo
 prefetcher, a crawler, or an `<img>` somebody planted on another page, and the visitor is simply
 signed out. It is styled to read as a link so the header does not gain a button.
 
+## A picture beside a list
+
+A paragraph holding **nothing but an image**, immediately followed by a list, floats the image and
+runs the list beside it — an avatar and a row of contact links, which is what the About page is.
+
+```markdown
+![avatar](media#48)
+
+- [{{ icon('github', style='brands') }} GitHub](https://github.com/goph-R)
+- [{{ icon('twitch', style='brands') }} Twitch](https://www.twitch.tv/g0phr)
+```
+
+The shape *is* the selector — `p:has(> img:only-child):has(+ ul)` — because markdown cannot put a
+class on anything, so the only handle a stylesheet gets is the structure the author wrote. It is a
+layout rather than a table on purpose: a table would be announced as one to a screen reader and,
+with `overflow-x: auto`, would scroll sideways on a phone. This stacks below 700px instead.
+
+The cost is a false positive: a post where a lone image happens to be followed by a bullet list
+would float too. Nothing on the site does today.
+
 ## Icons
 
 Font Awesome Free 6.7.2 is in `assets/`, **repacked**: the asset route serves a flat folder, so the
