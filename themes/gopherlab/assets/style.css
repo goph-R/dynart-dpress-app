@@ -446,6 +446,20 @@ body.home .site-content { padding-top: 0; }
 .sidebar .tag-cloud a, .sidebar .tag-cloud a:visited { color: var(--text); }
 .sidebar .tag-cloud a:hover { color: var(--accent); }
 
+/* The block already says how heavily each tag is used - `tag-1` to `tag-5`, a bucket over the
+   range it found - and without a size for them a cloud is a list of the same word repeated.
+   The block decides what is popular; this decides what popular looks like.
+
+   `inline-block` and a line-height, because a row of mixed sizes on a shared baseline is what
+   makes a cloud look like a mistake rather than a cloud. */
+.sidebar .tag-cloud { line-height: 1.9; }
+.sidebar .tag-cloud a { display: inline-block; margin-right: 9px; }
+.sidebar .tag-cloud .tag-1 { font-size: 13px; opacity: .75; }
+.sidebar .tag-cloud .tag-2 { font-size: 15px; opacity: .85; }
+.sidebar .tag-cloud .tag-3 { font-size: 17px; }
+.sidebar .tag-cloud .tag-4 { font-size: 20px; }
+.sidebar .tag-cloud .tag-5 { font-size: 23px; font-family: var(--display); font-weight: 700; }
+
 /* --- footer ------------------------------------------------------------------------------- */
 
 /* the original's footer is one bar - a widget area is there if a site fills it, and this site
