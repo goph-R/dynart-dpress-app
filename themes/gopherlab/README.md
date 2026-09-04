@@ -184,6 +184,33 @@ not a link, because `/logout` is POST only: a link that ends a session can be fo
 prefetcher, a crawler, or an `<img>` somebody planted on another page, and the visitor is simply
 signed out. It is styled to read as a link so the header does not gain a button.
 
+## Icons
+
+Font Awesome Free 6.7.2 is in `assets/`, **repacked**: the asset route serves a flat folder, so the
+stylesheet's `../webfonts/` paths are bare file names, and the `.ttf` fallbacks are gone because
+every browser that runs this site reads woff2. Nothing else is changed, and the licence banner is
+where Font Awesome put it (icons CC BY 4.0, fonts SIL OFL 1.1, code MIT).
+
+```
+assets/fontawesome.css            73 KB
+assets/fa-solid-900.woff2        155 KB   the main set
+assets/fa-brands-400.woff2       116 KB   github, youtube, x, rust
+assets/fa-regular-400.woff2       25 KB   the outline variants
+assets/fa-v4compatibility.woff2    5 KB   only for FA4 class names
+```
+
+A font is downloaded when a rule uses it, so a page with two brand icons on it fetches
+`fa-brands-400` and nothing else. `head.phtml` links the stylesheet only when the file is there,
+so removing these five files leaves a working theme rather than a page of 404s.
+
+In a template: `<i class="fa-brands fa-github"></i>`. In a post, page or block:
+`{{ icon('github', style='brands') }}` — raw HTML in markdown is stripped, so the shortcode is the
+way in. See `docs/shortcodes.md` §8.
+
+**To upgrade**, re-pack rather than hand-edit: take `css/all.min.css` and the four `webfonts/*.woff2`
+from the release, drop the `,url(…ttf) format("truetype")` from each `src`, and rewrite
+`url(../webfonts/` to `url(`.
+
 ## Post links
 
 `route_url($post_path.$post['slug'])`, never `route_url('/post/'.…)`. Where a post lives is the
