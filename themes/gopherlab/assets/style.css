@@ -42,6 +42,11 @@
        16:9 between them, and letting each keep its own is what made the strip look uneven. */
     --card-ratio: 3 / 2;
 
+    /* The big one is a banner and wants to be wider than a card. The original measures about
+       798x490 where this sits, which is this. Set it to `var(--card-ratio)` for one shape
+       throughout. */
+    --hero-ratio: 16 / 10;
+
     --font:      Inter, "Segoe UI", system-ui, -apple-system, sans-serif;
     --display:   "Roboto Condensed", sans-serif;
     --mono:      monaco, consolas, "Andale Mono", "DejaVu Sans Mono", monospace;
@@ -216,7 +221,9 @@ body.home .site-content { padding-top: 0; }
    less width than a column of prose, and the four small ones want more than a sidebar. Their text
    still lands on the sidebar's left edge; the thumbnails sit out to the left of it. */
 @media (min-width: 1025px) {
-    .featured { grid-template-columns: 60% 40%; gap: 0; }
+    /* `start`, because a stretched grid item ignores its own `aspect-ratio` - the row would
+       size the big card and the ratio would never apply */
+    .featured { grid-template-columns: 60% 40%; gap: 0; align-items: start; }
     /* only the big picture meets the menu bar. The small ones are a list of headings, and a
        list of headings hard against the bar above it has nothing separating it from the bar -
        and the same inset above as beside, from one value so they cannot drift apart. */
@@ -228,7 +235,11 @@ body.home .site-content { padding-top: 0; }
  * be four cramped rows above a list that already says the same thing */
 @media (max-width: 1024px) { .featured-rest { display: none; } }
 
-.featured-lead { position: relative; display: block; overflow: hidden; border-radius: var(--radius); }
+/* The shape is the card's, not the file's: without it the big picture stretched to whatever
+   height the four small ones happened to need, so the front page had a different banner every
+   time a post was featured or unfeatured. */
+.featured-lead { position: relative; display: block; overflow: hidden; border-radius: var(--radius);
+                 aspect-ratio: var(--hero-ratio); }
 .featured-lead img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
 /* No picture is the ordinary case, not the exception: a post need not have one, and the one it
