@@ -42,10 +42,10 @@
        16:9 between them, and letting each keep its own is what made the strip look uneven. */
     --card-ratio: 3 / 2;
 
-    /* The big one is a banner and wants to be wider than a card. The original measures about
-       798x490 where this sits, which is this. Set it to `var(--card-ratio)` for one shape
-       throughout. */
-    --hero-ratio: 16 / 10;
+    /* The big one, a little taller than the 16/10 the original measures, so the four small cards
+       beside it sit in a column with the same space above them as below. Nudge this one number if
+       they do not come out level: smaller is taller. */
+    --hero-ratio: 3 / 2;
 
     --font:      Inter, "Segoe UI", system-ui, -apple-system, sans-serif;
     --display:   "Roboto Condensed", sans-serif;
@@ -227,7 +227,20 @@ body.home .site-content { padding-top: 0; }
     /* only the big picture meets the menu bar. The small ones are a list of headings, and a
        list of headings hard against the bar above it has nothing separating it from the bar -
        and the same inset above as beside, from one value so they cannot drift apart. */
-    .featured-rest { padding-left: var(--featured-inset); padding-top: var(--featured-inset); }
+    /* The four cards **centred** in the height the picture sets, so the space above them is the
+       space below them - whatever the titles do. A number here could not manage that: a card
+       with a three line title is taller than one with a single line, so any inset that looked
+       right on today's front page would be wrong on tomorrow's.
+
+       `align-self: stretch` because the row is set to `start` for the picture's sake, and this
+       column is the one that does want the whole height. */
+    .featured-rest {
+        align-self: stretch; display: flex; flex-direction: column; justify-content: center;
+        padding: var(--featured-inset) 0 var(--featured-inset) var(--featured-inset);
+    }
+    /* the last card carries no gap of its own, or the space under the four would be the inset
+       plus its margin while the space above them was the inset alone */
+    .featured-rest .featured-small:last-child { margin-bottom: 0; }
     /* one featured post is a banner, not a two column grid with a hole in it */
     .featured-solo { grid-template-columns: 1fr; }
 }
