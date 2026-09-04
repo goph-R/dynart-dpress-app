@@ -184,6 +184,13 @@ not a link, because `/logout` is POST only: a link that ends a session can be fo
 prefetcher, a crawler, or an `<img>` somebody planted on another page, and the visitor is simply
 signed out. It is styled to read as a link so the header does not gain a button.
 
+## Post links
+
+`route_url($post_path.$post['slug'])`, never `route_url('/post/'.…)`. Where a post lives is the
+`post_path` setting — `/post/the-slug` or `/the-slug` — and `$post_path` is the prefix, handed to
+every template. Hardcoding the old shape still works, because the other one answers with a 301; it
+just makes every link on the page a redirect.
+
 ## Previews
 
 `content/single.phtml` and `content/page.phtml` each begin with one line that draws the CMS's

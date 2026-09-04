@@ -20,7 +20,7 @@ $featured_posts = $featured_posts ?? [];
                   // and in a panel of its own when there is not. A post need not have a picture,
                   // and an overlay with nothing under it is a card with no height at all. ?>
             <a class="featured-lead<?= isset($thumbnails[$lead['id']]) ? ' has-image' : '' ?>"
-               href="<?= esc_attr(route_url('/post/'.$lead['slug'])) ?>">
+               href="<?= esc_attr(route_url($post_path.$lead['slug'])) ?>">
                 <?php if (isset($thumbnails[$lead['id']])): ?>
                     <?= $mediaView->tag($thumbnails[$lead['id']], 'medium', ['alt' => '']) ?>
                 <?php endif ?>
@@ -36,7 +36,7 @@ $featured_posts = $featured_posts ?? [];
                 <div class="featured-rest">
                     <?php foreach (array_slice($featured_posts, 1) as $post): ?>
                         <a class="featured-small<?= isset($thumbnails[$post['id']]) ? ' has-image' : '' ?>"
-                           href="<?= esc_attr(route_url('/post/'.$post['slug'])) ?>">
+                           href="<?= esc_attr(route_url($post_path.$post['slug'])) ?>">
                             <?php if (isset($thumbnails[$post['id']])): ?>
                                 <?= $mediaView->tag($thumbnails[$post['id']], 'thumb', ['alt' => '']) ?>
                             <?php endif ?>
@@ -64,12 +64,12 @@ $featured_posts = $featured_posts ?? [];
             <article class="post-summary<?= isset($thumbnails[$post['id']]) ? ' has-image' : '' ?>">
                 <?php if (isset($thumbnails[$post['id']])): ?>
                     <a class="post-thumbnail" tabindex="-1" aria-hidden="true"
-                       href="<?= esc_attr(route_url('/post/'.$post['slug'])) ?>"><?=
+                       href="<?= esc_attr(route_url($post_path.$post['slug'])) ?>"><?=
                         $mediaView->tag($thumbnails[$post['id']], 'medium', ['alt' => ''])
                     ?></a>
                 <?php endif ?>
                 <div class="post-summary-body">
-                    <h2><a href="<?= esc_attr(route_url('/post/'.$post['slug'])) ?>"><?= esc_html($post['title']) ?></a></h2>
+                    <h2><a href="<?= esc_attr(route_url($post_path.$post['slug'])) ?>"><?= esc_html($post['title']) ?></a></h2>
                     <p class="meta">
                         <?php if (isset($authors[$post['id']])): ?>by <?= esc_html($authors[$post['id']]) ?> &mdash; <?php endif ?>
                         <?= $dates->tag($post['published_at']) ?>
@@ -82,7 +82,7 @@ $featured_posts = $featured_posts ?? [];
                           // post for anybody who does not know the title is a link. The title
                           // rides along for a screen reader, where a page of identical
                           // "Read more" links says nothing about where any of them go. ?>
-                    <a class="read-more" href="<?= esc_attr(route_url('/post/'.$post['slug'])) ?>">Read more<span
+                    <a class="read-more" href="<?= esc_attr(route_url($post_path.$post['slug'])) ?>">Read more<span
                         class="sr-only">: <?= esc_html($post['title']) ?></span></a>
                 </div>
             </article>
