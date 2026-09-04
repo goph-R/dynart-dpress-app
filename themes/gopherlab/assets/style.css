@@ -366,7 +366,13 @@ body.home .site-content { padding-top: 0; }
     }
     /* `overflow: hidden` makes the list its own formatting context, so it sits *beside* the
        float in a column of its own rather than wrapping its lines around it */
-    .entry-content p:has(> img:only-child):has(+ ul) + ul { overflow: hidden; margin-top: 0; }
+    .entry-content p:has(> img:only-child):has(+ ul) + ul { overflow: hidden; }
+}
+/* Outside the query, because this is what the list *is* rather than how it sits beside the
+   picture: no bullets, an indent of its own, and no margin. A row of contact links is a list
+   for the sake of being a list of things, not a list somebody is counting through. */
+.entry-content p:has(> img:only-child):has(+ ul) + ul {
+    list-style: none; padding-left: 1em; margin: 0;
 }
 /* and the float ends where the content does, however tall the picture turned out to be */
 .entry-content::after { content: ""; display: block; clear: both; }

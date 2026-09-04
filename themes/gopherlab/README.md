@@ -201,6 +201,11 @@ class on anything, so the only handle a stylesheet gets is the structure the aut
 layout rather than a table on purpose: a table would be announced as one to a screen reader and,
 with `overflow-x: auto`, would scroll sideways on a phone. This stacks below 700px instead.
 
+That list loses its bullets, gets a 1em indent of its own and no margin — it is a list for the
+sake of being a list of things, not one somebody is counting through. Those three are outside
+the media query, because they are what the list *is* rather than how it sits beside the
+picture.
+
 The cost is a false positive: a post where a lone image happens to be followed by a bullet list
 would float too. Nothing on the site does today.
 
