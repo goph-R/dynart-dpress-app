@@ -37,6 +37,11 @@
     --gap:       50px;
     --featured-inset: 40px;   /* above and beside the small featured articles, equally */
 
+    /* Every card picture is cropped to one shape, so a row of them is a row rather than a ragged
+       edge - the original crops its own to 250x170, which is this. The sources are 4:3, 3:2 and
+       16:9 between them, and letting each keep its own is what made the strip look uneven. */
+    --card-ratio: 3 / 2;
+
     --font:      Inter, "Segoe UI", system-ui, -apple-system, sans-serif;
     --display:   "Roboto Condensed", sans-serif;
     --mono:      monaco, consolas, "Andale Mono", "DejaVu Sans Mono", monospace;
@@ -248,9 +253,11 @@ body.home .site-content { padding-top: 0; }
 .featured-small { display: grid; grid-template-columns: 1fr; gap: 16px;
                   align-items: start; margin-bottom: 24px; }
 .featured-small.has-image { grid-template-columns: 120px 1fr; }
-/* the picture at its own ratio: a fixed height with `object-fit: cover` was a second crop on top
-   of the preset's, so a wide screenshot lost its sides twice over */
-.featured-small img { width: 120px; height: auto;
+/* Cropped to the card shape rather than to the preset's. `medium` is a *fitted* derivative, so
+   the file keeps its own proportions and the crop happens here, once, where the shape is
+   decided - rather than in a 320x320 preset that squares everything before a stylesheet has
+   a say. */
+.featured-small img { width: 120px; aspect-ratio: var(--card-ratio); object-fit: cover;
                       display: block; border-radius: var(--radius); }
 .featured-small h3 { font-size: 18px; margin: 0 0 6px; color: var(--text); line-height: 1.35; }
 .featured-small .meta { margin: 0; font-size: 14px; }
@@ -263,7 +270,9 @@ body.home .site-content { padding-top: 0; }
 .post-summary h2 a { color: var(--link); }
 .post-summary h2 a:hover { color: var(--accent); }
 .post-summary .post-thumbnail { display: block; margin-bottom: 16px; }
-.post-summary .post-thumbnail img { width: 100%; border-radius: var(--radius); display: block; }
+/* the same shape as the small featured cards, so the front page has one card picture and not two */
+.post-summary .post-thumbnail img { width: 100%; aspect-ratio: var(--card-ratio);
+                                   object-fit: cover; border-radius: var(--radius); display: block; }
 
 /* The lead is cut here rather than when it is written, because `lead_html` is HTML - a
    character count through it would take a tag off mid-word - and because a post with no `---`
