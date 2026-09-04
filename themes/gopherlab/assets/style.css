@@ -248,7 +248,9 @@ body.home .site-content { padding-top: 0; }
 .featured-small { display: grid; grid-template-columns: 1fr; gap: 16px;
                   align-items: start; margin-bottom: 24px; }
 .featured-small.has-image { grid-template-columns: 120px 1fr; }
-.featured-small img { width: 120px; height: 80px; object-fit: cover;
+/* the picture at its own ratio: a fixed height with `object-fit: cover` was a second crop on top
+   of the preset's, so a wide screenshot lost its sides twice over */
+.featured-small img { width: 120px; height: auto;
                       display: block; border-radius: var(--radius); }
 .featured-small h3 { font-size: 16px; margin: 0 0 6px; color: var(--text); line-height: 1.35; }
 .featured-small .meta { margin: 0; font-size: 13px; }

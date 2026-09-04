@@ -38,7 +38,12 @@ $featured_posts = $featured_posts ?? [];
                         <a class="featured-small<?= isset($thumbnails[$post['id']]) ? ' has-image' : '' ?>"
                            href="<?= esc_attr(route_url($post_path.$post['slug'])) ?>">
                             <?php if (isset($thumbnails[$post['id']])): ?>
-                                <?= $mediaView->tag($thumbnails[$post['id']], 'thumb', ['alt' => '']) ?>
+                                <?php // `medium` and not `thumb`: the thumb preset is a *square crop*
+                                      // (320x320, cropped), so a 16:9 screenshot arrived with its sides
+                                      // already cut off before the stylesheet ever saw it. `medium` fits
+                                      // inside its box and keeps the ratio, and the list below asks for
+                                      // the same file, so this generates nothing new. ?>
+                                <?= $mediaView->tag($thumbnails[$post['id']], 'medium', ['alt' => '']) ?>
                             <?php endif ?>
                             <span>
                                 <h3><?= esc_html($post['title']) ?></h3>
