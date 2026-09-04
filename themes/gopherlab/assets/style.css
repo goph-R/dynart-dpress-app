@@ -316,6 +316,10 @@ body.home .site-content { padding-top: 0; }
 .entry-content { color: var(--text); font-size: 17px; line-height: 1.7; }
 .entry-content > :first-child { margin-top: 0; }
 .entry-content > :last-child { margin-bottom: 0; }
+/* Paragraphs were on the browser default, which is `1em` top and bottom collapsing to one
+   17px gap - tight for prose at this line height. A bottom margin only, so what sits
+   between two paragraphs is one number rather than the larger of two. */
+.entry-content p { margin: 0 0 1.5em; }
 .entry-content h2 { font-size: 24px; }
 .entry-content h3 { font-size: 20px; }
 .entry-content a { color: var(--link); }
