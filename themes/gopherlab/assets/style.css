@@ -460,7 +460,22 @@ body.home .site-content { padding-top: 0; }
 .sidebar .tag-cloud .tag-4 { font-size: 20px; }
 .sidebar .tag-cloud .tag-5 { font-size: 23px; font-family: var(--display); font-weight: 700; }
 
-/* --- footer ------------------------------------------------------------------------------- */
+/* The Ko-fi button. The colour is the block's own - an inline style, because it is a value
+   somebody typed rather than a thing a class can carry - so what is here is only the shape.
+   `color: inherit` on the visited state, or the browser's purple wins over an inline colour on
+   a link somebody has already followed. */
+.kofi-description { margin: 0 0 12px; color: var(--text); font-size: 15px; }
+.kofi-button {
+    display: inline-flex; align-items: center; gap: 9px;
+    padding: 10px 18px; border-radius: 999px; text-decoration: none;
+    font-family: var(--display); font-weight: 700; line-height: 1;
+}
+.kofi-button, .kofi-button:visited { color: inherit; }
+.kofi-button:hover { filter: brightness(1.1); }
+.kofi-cup { width: 22px; height: auto; display: block; }
+
+/* --- footer ---
+---------------------------------------------------------------------------- */
 
 /* the original's footer is one bar - a widget area is there if a site fills it, and this site
    does not, so with an empty `footer` place the bar is all that renders */
