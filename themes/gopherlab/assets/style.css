@@ -274,6 +274,9 @@ body.home .site-content { padding-top: 0; }
     display: -webkit-box; -webkit-box-orient: vertical;
     -webkit-line-clamp: 4; line-clamp: 4;
     overflow: hidden;
+    /* said rather than inherited: it took the base size with it when that went up, and an
+       excerpt is meant to read smaller than the article it is an excerpt of */
+    font-size: 16px;
 }
 /* the clamp counts the lines inside, so the paragraphs must not push it about with their own
    margins at either end */
@@ -321,7 +324,7 @@ body.home .site-content { padding-top: 0; }
 
 .entry-title { font-size: 38px; margin: 0 0 12px; }
 
-.entry-content { color: var(--text); font-size: 19px; line-height: 1.7; }
+.entry-content { color: var(--text); font-size: 17px; line-height: 1.7; }
 .entry-content > :first-child { margin-top: 0; }
 .entry-content > :last-child { margin-bottom: 0; }
 /* Paragraphs were on the browser default, which is `1em` top and bottom collapsing to one
