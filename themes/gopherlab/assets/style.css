@@ -79,7 +79,7 @@ body {
     margin: 0;
     background: var(--bg);
     color: var(--text);
-    font: 16px/1.5 var(--font);
+    font: 18px/1.5 var(--font);
 }
 
 a { color: var(--link); text-decoration: none; }
@@ -127,9 +127,9 @@ img, video { max-width: 100%; height: auto; }
 .brand { display: flex; align-items: center; gap: 16px; color: var(--text); }
 .brand:hover { color: var(--text); }
 .brand img { width: 64px; height: auto; }
-.site-title { font-family: var(--font); font-size: 34px; font-weight: 700; line-height: 1.1;
+.site-title { font-family: var(--font); font-size: 37px; font-weight: 700; line-height: 1.1;
               color: var(--accent); margin: 0; display: block; }
-.site-description { color: var(--text); font-weight: 700; font-size: 14px; margin: 2px 0 0;
+.site-description { color: var(--text); font-weight: 700; font-size: 15px; margin: 2px 0 0;
                     display: block; }
 .spacer { flex: 1; }
 
@@ -144,7 +144,7 @@ img, video { max-width: 100%; height: auto; }
 
 .site-social { display: flex; gap: 14px; align-items: center; }
 .site-social .menu { list-style: none; display: flex; gap: 16px; align-items: center; margin: 0; padding: 0; }
-.site-social a { color: var(--text); font-size: 15px; display: flex; align-items: center; }
+.site-social a { color: var(--text); font-size: 16px; display: flex; align-items: center; }
 .site-social a:hover { color: var(--accent); }
 /* `currentColor` on the path, so a mark takes the colour of the link it sits in and the hover
    costs no second rule. `1em` so it scales with the text a fallback label would have used. */
@@ -160,7 +160,7 @@ img, video { max-width: 100%; height: auto; }
 .site-nav .menu a {
     display: block; padding: 16px 16px; color: var(--link);
     /* the body face: the original sets no family on its menu at all, so it inherits one */
-    font-family: var(--font); font-weight: 700; font-size: 17px; letter-spacing: .02em;
+    font-family: var(--font); font-weight: 700; font-size: 19px; letter-spacing: .02em;
     /* transparent to begin with, so appearing on hover moves nothing */
     border-top: 1px solid transparent;
 }
@@ -175,7 +175,7 @@ img, video { max-width: 100%; height: auto; }
 }
 .site-nav .menu li:hover > .menu,
 .site-nav .menu li:focus-within > .menu { display: flex; }
-.site-nav .menu .menu a { padding: 10px 16px; font-size: 15px; border-top-color: transparent; }
+.site-nav .menu .menu a { padding: 10px 16px; font-size: 16px; border-top-color: transparent; }
 .site-nav .menu .menu a:hover { border-top-color: transparent; background: var(--sunken); }
 
 /* --- the two columns ---------------------------------------------------------------------- */
@@ -239,7 +239,7 @@ body.home .site-content { padding-top: 0; }
 }
 /* white over the picture rather than orange: the overlay is already dark, and the heading colour
    that reads on the page does not read on a photograph. On the panel it is a heading again. */
-.featured-lead h2 { font-size: 32px; margin: 0 0 8px; color: var(--heading); }
+.featured-lead h2 { font-size: 35px; margin: 0 0 8px; color: var(--heading); }
 .featured-lead.has-image h2 { color: #fff; }
 .featured-lead .meta { margin: 0; }
 .featured-lead.has-image .meta { color: #cfcfcf; }
@@ -252,14 +252,14 @@ body.home .site-content { padding-top: 0; }
    of the preset's, so a wide screenshot lost its sides twice over */
 .featured-small img { width: 120px; height: auto;
                       display: block; border-radius: var(--radius); }
-.featured-small h3 { font-size: 16px; margin: 0 0 6px; color: var(--text); line-height: 1.35; }
-.featured-small .meta { margin: 0; font-size: 13px; }
+.featured-small h3 { font-size: 18px; margin: 0 0 6px; color: var(--text); line-height: 1.35; }
+.featured-small .meta { margin: 0; font-size: 14px; }
 .featured-small:hover h3 { color: var(--accent); }
 
 /* --- the list of posts -------------------------------------------------------------------- */
 
 .post-summary { margin-bottom: var(--gap); }
-.post-summary h2 { font-size: 26px; margin: 0 0 10px; }
+.post-summary h2 { font-size: 29px; margin: 0 0 10px; }
 .post-summary h2 a { color: var(--link); }
 .post-summary h2 a:hover { color: var(--accent); }
 .post-summary .post-thumbnail { display: block; margin-bottom: 16px; }
@@ -306,35 +306,35 @@ body.home .site-content { padding-top: 0; }
     overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
 }
 
-.meta { color: var(--dim); font-size: 15px; margin: 0 0 12px; }
+.meta { color: var(--dim); font-size: 16px; margin: 0 0 12px; }
 .meta a { color: var(--dim); }
 .meta a:hover { color: var(--accent); }
 
 .cat-links { margin: 0 0 12px; }
 .cat-links a {
     display: inline-block; background: var(--sunken); color: var(--text);
-    font-size: 14px; padding: 4px 11px; border-radius: var(--radius); margin: 0 4px 4px 0;
+    font-size: 15px; padding: 4px 11px; border-radius: var(--radius); margin: 0 4px 4px 0;
 }
 .cat-links a:hover { color: var(--accent); }
 
 /* --- a post being read -------------------------------------------------------------------- */
 
-.entry-title { font-size: 35px; margin: 0 0 12px; }
+.entry-title { font-size: 38px; margin: 0 0 12px; }
 
-.entry-content { color: var(--text); font-size: 17px; line-height: 1.7; }
+.entry-content { color: var(--text); font-size: 19px; line-height: 1.7; }
 .entry-content > :first-child { margin-top: 0; }
 .entry-content > :last-child { margin-bottom: 0; }
 /* Paragraphs were on the browser default, which is `1em` top and bottom collapsing to one
    17px gap - tight for prose at this line height. A bottom margin only, so what sits
    between two paragraphs is one number rather than the larger of two. */
 .entry-content p { margin: 0 0 1.5em; }
-.entry-content h2 { font-size: 24px; }
-.entry-content h3 { font-size: 20px; }
+.entry-content h2 { font-size: 26px; }
+.entry-content h3 { font-size: 22px; }
 .entry-content a { color: var(--link); }
 .entry-content a:hover { color: var(--accent); text-decoration: underline; }
 .entry-content img { border-radius: var(--radius); }
 .entry-content figure { margin: 1.6em 0; text-align: center; }
-.entry-content figcaption { color: var(--dim); font-size: 15px; margin-top: 8px; }
+.entry-content figcaption { color: var(--dim); font-size: 16px; margin-top: 8px; }
 
 .entry-content code {
     background: var(--sunken); color: var(--text);
@@ -421,7 +421,7 @@ body.home .site-content { padding-top: 0; }
 .tags { margin: 24px 0 0; }
 .tags .tag, .tags .tag:visited {
     display: inline-block; background: #16171f; color: #fff;
-    font-size: 11px; letter-spacing: .06em; text-transform: uppercase;
+    font-size: 12px; letter-spacing: .06em; text-transform: uppercase;
     padding: 5px 9px; border-radius: var(--radius); margin: 0 4px 4px 0;
 }
 .tags .tag:hover { background: var(--line); color: var(--accent); }
@@ -434,7 +434,7 @@ body.home .site-content { padding-top: 0; }
 
 .sidebar .block { margin-bottom: 40px; }
 .sidebar .block-title {
-    color: var(--widget); font-family: var(--display); font-size: 21px; font-weight: 700;
+    color: var(--widget); font-family: var(--display); font-size: 23px; font-weight: 700;
     text-transform: uppercase; letter-spacing: .02em;
     border-bottom: 1px solid var(--rule); padding-bottom: 8px; margin: 0 0 20px;
 }
@@ -454,17 +454,17 @@ body.home .site-content { padding-top: 0; }
    makes a cloud look like a mistake rather than a cloud. */
 .sidebar .tag-cloud { line-height: 1.9; }
 .sidebar .tag-cloud a { display: inline-block; margin-right: 9px; }
-.sidebar .tag-cloud .tag-1 { font-size: 13px; opacity: .75; }
-.sidebar .tag-cloud .tag-2 { font-size: 15px; opacity: .85; }
-.sidebar .tag-cloud .tag-3 { font-size: 17px; }
-.sidebar .tag-cloud .tag-4 { font-size: 20px; }
-.sidebar .tag-cloud .tag-5 { font-size: 23px; font-family: var(--display); font-weight: 700; }
+.sidebar .tag-cloud .tag-1 { font-size: 14px; opacity: .75; }
+.sidebar .tag-cloud .tag-2 { font-size: 16px; opacity: .85; }
+.sidebar .tag-cloud .tag-3 { font-size: 19px; }
+.sidebar .tag-cloud .tag-4 { font-size: 22px; }
+.sidebar .tag-cloud .tag-5 { font-size: 25px; font-family: var(--display); font-weight: 700; }
 
 /* The Ko-fi button. The colour is the block's own - an inline style, because it is a value
    somebody typed rather than a thing a class can carry - so what is here is only the shape.
    `color: inherit` on the visited state, or the browser's purple wins over an inline colour on
    a link somebody has already followed. */
-.kofi-description { margin: 0 0 12px; color: var(--text); font-size: 15px; }
+.kofi-description { margin: 0 0 12px; color: var(--text); font-size: 16px; }
 .kofi-button {
     display: inline-flex; align-items: center; gap: 9px;
     padding: 10px 18px; border-radius: 999px; text-decoration: none;
@@ -484,21 +484,21 @@ body.home .site-content { padding-top: 0; }
 .footer-widgets { display: grid; gap: 40px; grid-template-columns: 1fr; }
 @media (min-width: 768px) { .footer-widgets { grid-template-columns: repeat(3, 1fr); } }
 .site-footer .block-title {
-    color: var(--widget); font-family: var(--display); font-size: 18px; font-weight: 700;
+    color: var(--widget); font-family: var(--display); font-size: 20px; font-weight: 700;
     text-transform: uppercase; border-bottom: 1px solid var(--rule);
     padding-bottom: 8px; margin: 0 0 16px;
 }
 .site-footer ul { list-style: none; margin: 0; padding: 0; }
 .site-footer li { padding: 4px 0; }
 .site-footer .menu { display: block; }
-.footer-bottom { padding: 22px 0; font-size: 14px; color: #ccc;
+.footer-bottom { padding: 22px 0; font-size: 15px; color: #ccc;
                  display: flex; gap: 16px; align-items: center; }
 .footer-widgets + .footer-bottom { margin-top: 40px; }
 
 /* --- forms, for the account screens -------------------------------------------------------- */
 
 .form-field { margin-bottom: 16px; }
-.form-field label { display: block; font-size: 14px; font-weight: 700; margin-bottom: 5px; }
+.form-field label { display: block; font-size: 15px; font-weight: 700; margin-bottom: 5px; }
 input[type=text], input[type=password], input[type=email], textarea, select {
     width: 100%; padding: 10px; font: inherit;
     background: var(--line); color: #f8f8f2; border: 1px solid var(--rule);
