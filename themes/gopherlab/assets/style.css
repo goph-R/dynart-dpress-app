@@ -468,6 +468,10 @@ body.home .site-content { padding-top: 0; }
    `color: inherit` on the visited state, or the browser's purple wins over an inline colour on
    a link somebody has already followed. */
 .kofi-description { margin: 0 0 12px; color: var(--text); font-size: 16px; }
+/* markdown, so it brings paragraphs of its own - they must not add a gap at either end of
+   the box that is already spacing it */
+.kofi-description > :first-child { margin-top: 0; }
+.kofi-description > :last-child { margin-bottom: 0; }
 .kofi-button {
     display: inline-flex; align-items: center; gap: 9px;
     padding: 10px 18px; border-radius: 999px; text-decoration: none;
