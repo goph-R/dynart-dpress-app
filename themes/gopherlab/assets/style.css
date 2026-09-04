@@ -95,7 +95,13 @@ h1, h2, h3, h4, h5, h6 {
 
 img, video { max-width: 100%; height: auto; }
 /* an iframe has no intrinsic shape, so it needs one told to it rather than kept */
+/* A video is a block of its own in the flow - the shortcode writes the element straight into
+   the content rather than inside a paragraph - and an `iframe` has no margin of its own, so
+   without this the next paragraph sits flush against it. The same bottom-only spacing a
+   paragraph gets, so what is above it is whatever that thing decided. */
+.dpress-video { margin: 0 0 1.5em; }
 .dpress-embed { width: 100%; aspect-ratio: 16 / 9; height: auto; border: 0; display: block; }
+
 
 /* The site is a box, 1280px at most, centred - so on a wide screen the page colour shows down
    both sides and the header, the menu, the content and the footer all end at the same edge. The
