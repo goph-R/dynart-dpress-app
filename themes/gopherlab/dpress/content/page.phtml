@@ -2,8 +2,10 @@
 /**
  * A page - the same reading column as a post, with its breadcrumb
  *
- * Copied from the CMS's own and changed in two places: the title takes the theme's
- * heading size, and the prose gets the surface a post's prose gets.
+ * Copied from the CMS's own and changed in three places: the title takes the theme's heading
+ * size, the prose gets the surface a post's prose gets, and the CMS's "In this section" list
+ * of child pages is left out - the menu is how this site is navigated, and a second index at
+ * the foot of a page is furniture. The breadcrumb stays: that says where you *are*.
  */
 ?>
 <?php $this->useLayout($layout ?? 'dpress:layout') ?>
@@ -33,14 +35,6 @@
             'prev_url' => $prev_url ?? '', 'next_url' => $next_url ?? '',
             'page_urls' => $page_urls ?? [],
         ]) ?>
-        <?php if (!empty($children)): ?>
-            <h2 class="attachments-title">In this section</h2>
-            <ul class="attachments">
-                <?php foreach ($children as $child): ?>
-                    <li><a href="<?= esc_attr(route_url('/'.$child['slug'])) ?>"><?= esc_html($child['title']) ?></a></li>
-                <?php endforeach ?>
-            </ul>
-        <?php endif ?>
         <?php if (!empty($attachments)): ?>
             <h2 class="attachments-title">Attachments</h2>
             <ul class="attachments">
