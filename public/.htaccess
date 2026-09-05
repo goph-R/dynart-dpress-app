@@ -1,5 +1,24 @@
 RewriteEngine On
 
+# A trailing slash is a different URL for the same page, so canonicalise it rather than answer
+# both. The two halves of the problem look different and have one cause:
+#
+#   /category/development/  is a 404, because `?` in the route matches exactly one segment and
+#                           the empty segment after the slash makes three where two were wanted.
+#   /a-post/                is a 200, swallowed by the `/*` catch-all - which is worse, because
+#                           it is the same page at two URLs with nothing naming the real one.
+#
+# WordPress wrote trailing slashes, so anything migrating from it has them in Google's index and
+# in other people's links. This runs before the front controller and before PHP starts, so the
+# redirect costs no boot at all.
+#
+# `%{REQUEST_URI}` rather than the rule pattern: it is the whole path from the server root, so
+# this is correct both at a document root and under a subdirectory (a local /project/public).
+# Real directories are skipped - Apache's own DirectorySlash owns those.
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} ^(.+?)/+$
+RewriteRule ^ %1 [R=301,L,QSA]
+
 # Everything that is not a real file or directory goes to the front controller.
 # The router reads the path from the `route` parameter, so the rewrite has to pass it on.
 RewriteCond %{REQUEST_FILENAME} !-f
