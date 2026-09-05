@@ -32,12 +32,3 @@
     <script>document.documentElement.className += ' js-nav';</script>
     <script src="<?= esc_attr($theme->url('nav.js')) ?>" defer></script>
 <?php endif ?>
-<?php // Font Awesome, if it has been put in `assets/`. Loaded only when it is there, so the theme
-      // works without it and `{{ icon(...) }}` in a post is simply a class nothing draws.
-      //
-      // The folder is **flat** - the asset route serves `name.ext` and no directories - so the
-      // `url()`s inside the stylesheet have to be rewritten from `../webfonts/fa-solid-900.woff2`
-      // to the bare file name. That is the whole of the installation. ?>
-<?php if ($theme->exists('fontawesome.css')): ?>
-    <link rel="stylesheet" href="<?= esc_attr($theme->url('fontawesome.css')) ?>">
-<?php endif ?>
