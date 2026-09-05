@@ -143,14 +143,24 @@ img, video { max-width: 100%; height: auto; }
                     display: block; }
 .spacer { flex: 1; }
 
+/* the right hand column: the marks, and the account links under them */
+.header-aside { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
+.site-account { display: flex; align-items: center; gap: 9px; font-size: 15px; }
+
+/* The `|` between them, before every item that has one before it - so one link on its own
+   never gets one, and a third would need no rule of its own. Generated content and not
+   markup, because it is a rule about how a list looks and not a thing anybody wrote. */
+.site-account > * + *::before { content: '|'; margin-right: 9px; color: var(--line); }
+
 /* the logout is a form so that it can be a POST, and a form in a header should still look like
-   the links beside it rather than like a button dropped into the middle of them */
-.header-inner .logout { margin: 0; }
-.header-inner .logout button {
+   the links beside it rather than like a button dropped into the middle of them. Flex, so
+   that the separator above lands *beside* its button rather than on a line of its own. */
+.site-account .logout { display: flex; align-items: center; margin: 0; }
+.site-account .logout button {
     background: none; border: 0; padding: 0; margin: 0;
     font: inherit; color: var(--link); cursor: pointer;
 }
-.header-inner .logout button:hover { background: none; color: var(--accent); }
+.site-account .logout button:hover { background: none; color: var(--accent); }
 
 .site-social { display: flex; gap: 14px; align-items: center; }
 .site-social .menu { list-style: none; display: flex; gap: 16px; align-items: center; margin: 0; padding: 0; }
