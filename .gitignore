@@ -25,3 +25,7 @@
 # The Font Awesome plugin is its own repository, cloned in here the way a plugin is installed:
 # https://github.com/goph-R/dynart-dpress-fontawesome
 /plugins/fontawesome/
+
+# The Disqus plugin is its own repository, cloned in here the way a plugin is installed:
+# https://github.com/goph-R/dynart-dpress-disqus
+/plugins/disqus/
