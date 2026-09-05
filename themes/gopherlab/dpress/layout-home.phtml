@@ -24,13 +24,18 @@ $top = $places->render('home_top');
     <?php if ($top !== ''): ?>
         <div class="container home-top"><?= $top ?></div>
     <?php endif ?>
-    <div class="container">
-        <?php // full width, above both columns. `content/list.phtml` fills this block and the
-              // layout prints it - blocks accumulate across a render, so a template can hand the
-              // layout something that does not belong inside its own column ?>
+    <?php // **One** box for the strip and the two columns, and not the two the front page used
+          // to have. They are separate rows of one grid, which is what lets the four small
+          // cards move between them: full width beside the picture on a wide screen, and in
+          // the reading column with the sidebar beside them on a tablet. Two containers could
+          // not do that - there is no CSS that moves a box from one parent to another, and
+          // the alternative is the four rendered twice and one copy hidden.
+          //
+          // `content/list.phtml` fills the `featured` block and the layout prints it here:
+          // blocks accumulate across a render, so a template can hand the layout something
+          // that does not belong inside its own column. ?>
+    <div class="container home-area">
         <?= $this->block('featured') ?>
-    </div>
-    <div class="container content-area">
         <main class="primary"><?= $this->block('content') ?></main>
         <?php if ($sidebar !== ''): ?>
             <aside class="sidebar"><?= $sidebar ?></aside>

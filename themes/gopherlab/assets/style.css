@@ -347,10 +347,37 @@ body.home .site-content { padding-top: 0; }
 .content-area { display: block; }
 .primary { min-width: 0; }
 
+/* The front page is the same two columns with the featured strip as a row above them, in one
+   grid rather than in two boxes - see `layout-home.phtml` for why. Below 768px it is a stack,
+   the same as everywhere else. */
+.home-area .featured { grid-column: 1 / -1; }
+
 @media (min-width: 768px) {
     .content-area { display: flex; flex-wrap: wrap; }
     .primary { width: 70.3125%; }
     .sidebar { width: 29.6875%; padding-left: var(--gap); }
+
+    /* the same 70/30, said as columns - so the widths above are the grid's job here and the
+       two boxes must stop asking for a share of a share */
+    .home-area { display: grid; grid-template-columns: 70.3125% 1fr; align-items: start; }
+    .home-area .primary { grid-column: 1; width: auto; }
+    .home-area .sidebar { grid-column: 2; width: auto; }
+}
+
+/* The tablet, and the whole reason the front page is one grid: the four small cards leave the
+   full width row and join the reading column, and the sidebar comes up beside them instead of
+   starting level with the list. `display: contents` is what does it - the strip stops being a
+   box and its two halves become rows of the grid itself, so the picture can stay full width
+   while the four sit in a column that is 70% of it.
+
+   The sidebar is pinned only when there are four to sit beside. On a front page with one
+   featured post, or none at all, the rule does not match and ordinary placement puts it
+   level with the list, which is where it belongs when there is nothing above it. */
+@media (min-width: 780px) and (max-width: 1024px) {
+    .home-area .featured { display: contents; }
+    .home-area .featured-lead { grid-column: 1 / -1; margin-bottom: var(--gap); }
+    .home-area .featured-rest { grid-column: 1; margin-bottom: var(--gap); }
+    .home-area:has(.featured-rest) .sidebar { grid-row: 2 / span 2; }
 }
 .brand img { width: 84px; }
 @media (max-width: 767px) {
