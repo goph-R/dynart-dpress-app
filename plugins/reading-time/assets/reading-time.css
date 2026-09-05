@@ -1,0 +1,12 @@
+/* A plugin's own stylesheet, in the head of a visitor's page.
+ *
+ * Loaded only where there is something to style: `pageAssets()` gives `reading-time` as the
+ * needle, and the badge above is the only thing that writes that class. A site with the plugin
+ * enabled and no badge anywhere loads nothing. */
+.reading-time {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, .15);
+    font-size: 14px;
+}

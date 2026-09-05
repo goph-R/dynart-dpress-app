@@ -1,0 +1,5 @@
+<?php // A plugin's own template, out of the folder its `views()` named ?>
+<p class="reading-time">
+    <?php if ($title !== ''): ?><strong><?= esc_html($title) ?></strong> <?php endif ?>
+    <?= (int)$minutes ?> min read
+</p>

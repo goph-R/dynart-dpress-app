@@ -27,7 +27,11 @@ class ReadingTimePlugin extends AbstractPlugin {
      * controller whose dependency is registered afterwards only fails when somebody visits it.
      */
     public function services(): array {
-        return [ReadingTimeService::class => ReadingTimeService::class];
+        return [
+            ReadingTimeService::class => ReadingTimeService::class,
+            // the block's renderer is a Micro callable, so the container has to know it
+            ReadingTimeBlock::class => ReadingTimeBlock::class,
+        ];
     }
 
     /** A field type of its own, rendered by this plugin's own template */
@@ -37,6 +41,38 @@ class ReadingTimePlugin extends AbstractPlugin {
 
     public function views(): array {
         return ['reading_time' => dirname(__DIR__).'/views'];
+    }
+
+    /**
+     * A block type, from a folder under `plugins/`
+     *
+     * The same definition `DpressServices::BLOCKS` holds for the core three, which is the
+     * point: a plugin uses the mechanism the CMS itself eats.
+     */
+    public function blocks(): array {
+        return [
+            'reading_time' => [
+                'title'  => 'Reading time',
+                'render' => [ReadingTimeBlock::class, 'render'],
+                'fields' => [
+                    'minutes' => ['type' => 'text', 'label' => 'Minutes', 'required' => false,
+                                  'description' => 'Empty is '.ReadingTimeBlock::DEFAULT_MINUTES.'.'],
+                    'title'   => ['type' => 'text', 'label' => 'Lead in', 'required' => false,
+                                  'description' => 'A few words before the number. Optional.'],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Its stylesheet, in the head of a **visitor's** page
+     *
+     * Not `assets()`, which is the admin's. The value is the needle: `reading-time` is the
+     * class the badge above writes, so a site with this plugin enabled and no badge on the
+     * page loads nothing at all.
+     */
+    public function pageAssets(): array {
+        return ['reading-time.css' => 'reading-time'];
     }
 
     /** Its widget has a button, and a button needs a listener */
