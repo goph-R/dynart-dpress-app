@@ -629,8 +629,13 @@ body.home .site-content { padding-top: 0; }
     font-family: var(--mono); font-size: .95em;
     padding: .25em; border-radius: var(--radius);
 }
-/* a fenced block already has a background from the highlighter, so it must not get a second one */
-.entry-content pre { overflow-x: auto; border-radius: var(--radius); }
+/* a fenced block already has a background from the highlighter, so it must not get a second one.
+   `overscroll-behavior-x` is for the phone: a block that scrolls sideways is a block a thumb
+   swipes in, and the swipe would otherwise chain to the page once the code runs out - which
+   under Chrome's gesture navigation is the back gesture. This rule is for the un-highlighted
+   block; the highlighter's own element gets the same from `CodeAssets::STYLE`. */
+.entry-content pre { overflow-x: auto; overscroll-behavior-x: contain;
+                     border-radius: var(--radius); }
 .entry-content pre code { background: none; padding: 0; }
 
 .entry-content blockquote {
@@ -639,7 +644,7 @@ body.home .site-content { padding-top: 0; }
 }
 
 .entry-content table { width: 100%; border-collapse: collapse; margin: 1.6em 0; display: block;
-                       overflow-x: auto; }
+                       overflow-x: auto; overscroll-behavior-x: contain; }
 .entry-content th, .entry-content td { border: 0; padding: 8px 12px; text-align: left; }
 .entry-content thead th { color: var(--heading); font-family: var(--display); }
 .entry-content tbody tr:nth-child(odd) { background: var(--sunken); }
