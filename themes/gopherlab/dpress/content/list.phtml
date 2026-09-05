@@ -18,38 +18,57 @@ $featured_posts = $featured_posts ?? [];
             <?php $lead = $featured_posts[0] ?>
             <?php // `has-image` decides where the title goes: over the picture when there is one,
                   // and in a panel of its own when there is not. A post need not have a picture,
-                  // and an overlay with nothing under it is a card with no height at all. ?>
-            <a class="featured-lead<?= isset($thumbnails[$lead['id']]) ? ' has-image' : '' ?>"
-               href="<?= esc_attr(route_url($post_path.$lead['slug'])) ?>">
+                  // and an overlay with nothing under it is a card with no height at all.
+                  //
+                  // An `article` with links inside it, and not one big link around the lot: the
+                  // card carries a lead and a "Read more" on a narrow screen, and a link inside
+                  // a link is not a thing HTML has. The picture is `aria-hidden` and out of the
+                  // tab order, so the same destination is not offered three times over. ?>
+            <article class="featured-lead<?= isset($thumbnails[$lead['id']]) ? ' has-image' : '' ?>">
                 <?php if (isset($thumbnails[$lead['id']])): ?>
-                    <?= $mediaView->tag($thumbnails[$lead['id']], 'medium', ['alt' => '']) ?>
+                    <a class="featured-image" tabindex="-1" aria-hidden="true"
+                       href="<?= esc_attr(route_url($post_path.$lead['slug'])) ?>"><?=
+                        $mediaView->tag($thumbnails[$lead['id']], 'medium', ['alt' => ''])
+                    ?></a>
                 <?php endif ?>
-                <span class="featured-details">
-                    <h2><?= esc_html($lead['title']) ?></h2>
+                <div class="featured-details">
+                    <h2><a href="<?= esc_attr(route_url($post_path.$lead['slug'])) ?>"><?= esc_html($lead['title']) ?></a></h2>
                     <p class="meta">
                         <?php if (isset($authors[$lead['id']])): ?>by <?= esc_html($authors[$lead['id']]) ?> &mdash; <?php endif ?>
                         <?= $dates->tag($lead['published_at']) ?>
                     </p>
-                </span>
-            </a>
+                    <?php // drawn by the stylesheet only where there is room for them: over the
+                          // picture, a lead and a button would be most of the photograph ?>
+                    <div class="post-lead"><?= $lead['lead_html'] ?></div>
+                    <a class="read-more" href="<?= esc_attr(route_url($post_path.$lead['slug'])) ?>">Read more<span
+                        class="sr-only">: <?= esc_html($lead['title']) ?></span></a>
+                </div>
+            </article>
             <?php if (count($featured_posts) > 1): ?>
                 <div class="featured-rest">
                     <?php foreach (array_slice($featured_posts, 1) as $post): ?>
-                        <a class="featured-small<?= isset($thumbnails[$post['id']]) ? ' has-image' : '' ?>"
-                           href="<?= esc_attr(route_url($post_path.$post['slug'])) ?>">
+                        <article class="featured-small<?= isset($thumbnails[$post['id']]) ? ' has-image' : '' ?>">
                             <?php if (isset($thumbnails[$post['id']])): ?>
                                 <?php // `medium` and not `thumb`: the thumb preset is a *square crop*
                                       // (320x320, cropped), so a 16:9 screenshot arrived with its sides
                                       // already cut off before the stylesheet ever saw it. `medium` fits
                                       // inside its box and keeps the ratio, and the list below asks for
                                       // the same file, so this generates nothing new. ?>
-                                <?= $mediaView->tag($thumbnails[$post['id']], 'medium', ['alt' => '']) ?>
+                                <a class="featured-thumbnail" tabindex="-1" aria-hidden="true"
+                                   href="<?= esc_attr(route_url($post_path.$post['slug'])) ?>"><?=
+                                    $mediaView->tag($thumbnails[$post['id']], 'medium', ['alt' => ''])
+                                ?></a>
                             <?php endif ?>
-                            <span>
-                                <h3><?= esc_html($post['title']) ?></h3>
-                                <span class="meta"><?= $dates->tag($post['published_at']) ?></span>
-                            </span>
-                        </a>
+                            <div class="featured-small-body">
+                                <h3><a href="<?= esc_attr(route_url($post_path.$post['slug'])) ?>"><?= esc_html($post['title']) ?></a></h3>
+                                <p class="meta"><?= $dates->tag($post['published_at']) ?></p>
+                                <?php // shown from 1025px down, where the four stop being a column
+                                      // beside the picture and become entries of the list ?>
+                                <div class="post-lead"><?= $post['lead_html'] ?></div>
+                                <a class="read-more" href="<?= esc_attr(route_url($post_path.$post['slug'])) ?>">Read more<span
+                                    class="sr-only">: <?= esc_html($post['title']) ?></span></a>
+                            </div>
+                        </article>
                     <?php endforeach ?>
                 </div>
             <?php endif ?>

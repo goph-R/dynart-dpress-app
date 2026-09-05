@@ -227,7 +227,7 @@ img, video { max-width: 100%; height: auto; }
    can be as generous as a thumb without showing anywhere. */
 .nav-toggle { display: none; background: none; border: 0; margin: 0;
               padding: 14px var(--pad); margin-right: calc(var(--pad) * -1);
-              color: var(--link); cursor: pointer; -webkit-tap-highlight-color: transparent; }
+              color: #fff; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 /* `:active` and `:hover` both, and both saying `background`, because the theme gives every
    button a pink one on hover - and a tap on a touch screen *is* a hover, which it then
    keeps until something else is touched. These two are not buttons in that sense: they are
@@ -235,13 +235,15 @@ img, video { max-width: 100%; height: auto; }
 .nav-toggle:hover, .nav-toggle:active, .nav-toggle[aria-expanded="true"] {
     background: none; color: var(--accent);
 }
-.nav-toggle-bars { position: relative; display: block; width: 30px; height: 3px;
+/* smaller than the box around it, which is the point: the padding is what a thumb lands on
+   and the mark is only what says so */
+.nav-toggle-bars { position: relative; display: block; width: 24px; height: 2px;
                    background: currentColor; }
 .nav-toggle-bars::before, .nav-toggle-bars::after {
-    content: ''; position: absolute; left: 0; width: 30px; height: 3px; background: currentColor;
+    content: ''; position: absolute; left: 0; width: 24px; height: 2px; background: currentColor;
 }
-.nav-toggle-bars::before { top: -10px; }
-.nav-toggle-bars::after { top: 10px; }
+.nav-toggle-bars::before { top: -8px; }
+.nav-toggle-bars::after { top: 8px; }
 
 /* The button beside a menu item that has pages under it. Two borders of a square, turned: a
    chevron that needs no font and no file, and turning it the other way up is the open state.
@@ -280,7 +282,11 @@ img, video { max-width: 100%; height: auto; }
        .menu > li` and not `.menu > li`, because the second matches the items of a submenu too
        - and a submenu is one item unfolded rather than four more rows of the menu. */
     .site-panel .container > .menu > li,
+    .site-panel .site-social,
     .site-panel .site-account { border-top: 1px solid var(--line); }
+    /* the row and not the marks in it: `.menu > li` above would have drawn one over each of
+       the three, which is a line between two icons standing side by side */
+    .site-panel .site-social .menu > li { border-top: 0; }
 
     /* Everything in the panel is set to the right edge, under the button that opened it. The
        inset goes on the link and not on the container around it, so that the line above each
@@ -387,16 +393,15 @@ body.home .site-content { padding-top: 0; }
     /* one featured post is a banner, not a two column grid with a hole in it */
     .featured-solo { grid-template-columns: 1fr; }
 }
-/* Between 780px and 1025px the strip is the front page's first card and nothing more: the four
- * small ones would be cramped rows across a width that is too wide for them and too narrow
- * for the grid. Below 780px they come back - as list entries, see the bottom of this file. */
-@media (max-width: 1024px) and (min-width: 780px) { .featured-rest { display: none; } }
 
 /* The shape is the card's, not the file's: without it the big picture stretched to whatever
    height the four small ones happened to need, so the front page had a different banner every
    time a post was featured or unfeatured. */
 .featured-lead { position: relative; display: block; overflow: hidden; border-radius: var(--radius);
                  aspect-ratio: var(--hero-ratio); }
+/* the picture is a link of its own inside the card - the card cannot be one, because it
+   carries a "Read more" further down and a link inside a link is not a thing HTML has */
+.featured-lead .featured-image { display: block; width: 100%; height: 100%; }
 .featured-lead img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
 /* No picture is the ordinary case, not the exception: a post need not have one, and the one it
@@ -417,6 +422,25 @@ body.home .site-content { padding-top: 0; }
 .featured-lead .meta { margin: 0; }
 .featured-lead.has-image .meta { color: #cfcfcf; }
 
+/* `inherit`, so the heading keeps deciding its own colour - white over a picture, orange on
+   the panel - and the link inside it does not quietly become a link blue in either place */
+.featured-lead h2 a, .featured-small h3 a { color: inherit; }
+.featured-lead h2 a:hover, .featured-small h3 a:hover { color: var(--accent); }
+
+/* The lead and the way in are in the markup of every featured card and drawn on none of
+   them here: over a picture they would be most of the photograph, and beside it, in the
+   40% column, they are a paragraph in a space meant for a heading. The two media queries
+   below turn them on where there is room - the small ones from 1024px down, the big one
+   only below 780px, where it has stopped being a hero. */
+.featured .post-lead, .featured .read-more { display: none; }
+/* Everything the clamp needs except the `display` that switches it on, which is the media
+   queries' to give: `-webkit-box` and `none` are the same property, so the two cannot be
+   written in one place. Four lines, the same as the list. */
+.featured .post-lead {
+    -webkit-box-orient: vertical; -webkit-line-clamp: 4; line-clamp: 4;
+    overflow: hidden; font-size: 16px;
+}
+
 /* a row each: thumbnail, then title and date - stacked down the sidebar's width */
 .featured-small { display: grid; grid-template-columns: 1fr; gap: 16px;
                   align-items: start; margin-bottom: 24px; }
@@ -425,28 +449,48 @@ body.home .site-content { padding-top: 0; }
    the file keeps its own proportions and the crop happens here, once, where the shape is
    decided - rather than in a 320x320 preset that squares everything before a stylesheet has
    a say. */
+.featured-small .featured-thumbnail { display: block; }
 .featured-small img { width: 120px; aspect-ratio: var(--card-ratio); object-fit: cover;
                       display: block; border-radius: var(--radius); }
 .featured-small h3 { font-size: 18px; margin: 0 0 6px; color: var(--text); line-height: 1.35; }
 .featured-small .meta { margin: 0; font-size: 14px; }
 .featured-small:hover h3 { color: var(--accent); }
 
-/* Below 780px the strip stops being a strip. A hero with its title over the picture is a shape
-   that needs width: at 360px the overlay is most of the card and the title is three lines of
-   white on a photograph. So all five featured posts take the shape of the entries underneath
-   them - picture, title, date - and the front page is one list from the top.
+/* Below 1025px the four stop being a column beside the picture: there is no column, and a row
+   of a 120px thumbnail and a heading across the whole width is a card stretched into a
+   ledge. So they become entries of the list - the same picture, the same clamped lead, the
+   same way in - and the front page reads as one stream under the banner.
 
-   Which also puts the four back on the page. Between here and 1025px they are hidden, and a
-   featured post is left out of the list below, so on a phone those four were nowhere at all. */
-@media (max-width: 779px) {
-    .featured { display: block; margin-bottom: 0; }
+   This is also what puts them back on the page at all. They used to be hidden below 1025px,
+   and a featured post is left out of the list underneath, so between a phone and a laptop
+   four posts were nowhere. */
+@media (max-width: 1024px) {
+    .featured { gap: var(--gap); margin-bottom: var(--gap); }
     .featured-rest { display: block; }
-    /* the list entry's own bottom margin, so the two kinds space alike */
-    .featured-lead, .featured-small { display: block; margin: 0 0 var(--gap); }
-    /* the ratio moves to the picture: it is the picture that is cropped here, and the card is
-       only as tall as what is in it */
-    .featured-lead { aspect-ratio: auto; }
-    .featured-lead img, .featured-small img {
+    .featured-small, .featured-small.has-image { display: block; margin: 0 0 var(--gap); }
+    .featured-rest .featured-small:last-child { margin-bottom: 0; }
+    .featured-small img {
+        width: 100%; height: auto; aspect-ratio: var(--card-ratio); object-fit: cover;
+        display: block; margin-bottom: 16px;
+    }
+    .featured-small h3 { font-size: 29px; line-height: 1.2; margin: 0 0 10px; color: var(--link); }
+    .featured-small .meta { font-size: 16px; margin: 0 0 12px; }
+    .featured-small .post-lead { display: -webkit-box; }
+    .featured-small .read-more { display: inline-block; }
+}
+
+/* And below 780px the banner goes with them. A hero with its title over the picture is a
+   shape that needs width: at 360px the overlay is most of the card and the title is three
+   lines of white on a photograph. So it takes the same shape as the rest, lead and all, and
+   the front page is one list from the very top. */
+@media (max-width: 779px) {
+    .featured { display: block; }
+    /* The list entry's own bottom margin, so the two kinds space alike. And the ratio moves to
+       the picture, because it is the picture that is cropped here - the card is only as tall
+       as what is in it. */
+    .featured-lead { display: block; margin: 0 0 var(--gap); aspect-ratio: auto; }
+    .featured-lead .featured-image { height: auto; }
+    .featured-lead img {
         width: 100%; height: auto; aspect-ratio: var(--card-ratio); object-fit: cover;
         display: block; margin-bottom: 16px;
     }
@@ -455,12 +499,14 @@ body.home .site-content { padding-top: 0; }
     .featured-lead.has-image .featured-details {
         position: static; display: block; background: none; padding: 0;
     }
-    .featured-small > span { display: block; }
-    .featured-lead h2, .featured-lead.has-image h2, .featured-small h3 {
+    .featured-lead h2, .featured-lead.has-image h2 {
         font-size: 29px; line-height: 1.2; margin: 0 0 10px; color: var(--link);
     }
-    .featured-lead:hover h2, .featured-small:hover h3 { color: var(--accent); }
-    .featured-lead.has-image .meta, .featured-small .meta { color: var(--dim); font-size: 16px; }
+    .featured-lead .meta, .featured-lead.has-image .meta {
+        color: var(--dim); font-size: 16px; margin: 0 0 12px;
+    }
+    .featured-lead .post-lead { display: -webkit-box; }
+    .featured-lead .read-more { display: inline-block; }
     /* the strip is flush to the menu bar because a hero is the top of the page. A list is not,
        and wants the same air above it as every other page has */
     body.home .site-content { padding-top: 40px; }
@@ -492,8 +538,8 @@ body.home .site-content { padding-top: 0; }
 }
 /* the clamp counts the lines inside, so the paragraphs must not push it about with their own
    margins at either end */
-.post-summary .post-lead > :first-child { margin-top: 0; }
-.post-summary .post-lead > :last-child { margin-bottom: 0; }
+.post-summary .post-lead > :first-child, .featured .post-lead > :first-child { margin-top: 0; }
+.post-summary .post-lead > :last-child, .featured .post-lead > :last-child { margin-bottom: 0; }
 
 /* There whether or not the lead was cut. Somebody who has read the whole lead still needs the
    way in, and it is not obvious to everybody that the title is a link. */
