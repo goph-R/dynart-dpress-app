@@ -748,26 +748,17 @@ body.home .site-content { padding-top: 0; }
 .sidebar .tag-cloud .tag-4 { font-size: 22px; }
 .sidebar .tag-cloud .tag-5 { font-size: 25px; font-family: var(--display); font-weight: 700; }
 
-/* The Ko-fi button. The colour is the block's own - an inline style, because it is a value
-   somebody typed rather than a thing a class can carry - so what is here is only the shape.
-   `color: inherit` on the visited state, or the browser's purple wins over an inline colour on
-   a link somebody has already followed. */
-.kofi-description { margin: 0 0 12px; color: var(--text); font-size: 16px; }
-/* markdown, so it brings paragraphs of its own - they must not add a gap at either end of
-   the box that is already spacing it */
-.kofi-description > :first-child { margin-top: 0; }
-.kofi-description > :last-child { margin-bottom: 0; }
-.kofi-button {
-    display: inline-flex; align-items: center; gap: 9px;
-    padding: 10px 18px; border-radius: 999px; text-decoration: none;
-    font-family: var(--display); font-weight: 700; line-height: 1;
-    /* said rather than inherited: a button is a label, not prose, and it was taking the base
-       size the whole site had just been raised to */
-    font-size: 15px;
-}
-.kofi-button, .kofi-button:visited { color: inherit; }
-.kofi-button:hover { filter: brightness(1.1); }
-.kofi-cup { width: 22px; height: auto; display: block; }
+/* The Ko-fi button, which is a plugin: it ships its own stylesheet and that one draws the
+   shape - the flex row, the pill, the cup. What is left here is what a plugin has no business
+   deciding, which is the voice: this theme's display face, and a size that does not follow the
+   base size the site was raised to, because a button is a label rather than prose.
+
+   Nothing here may repeat a property the plugin sets. Its file is put in the head *after* this
+   one, so on anything both of them say, the plugin wins - which is the right way round for a
+   shape and the wrong way round for a font. Keeping to different properties is what makes the
+   two agree rather than fight. */
+.kofi-description { color: var(--text); font-size: 16px; }
+.kofi-button { font-family: var(--display); font-weight: 700; font-size: 15px; }
 
 /* --- footer ---
 ---------------------------------------------------------------------------- */
