@@ -43,11 +43,28 @@ $iconFor = function (string $url) use ($icons): string {
     <ul class="menu menu-<?= esc_attr($place) ?>">
         <?php foreach ($items as $item): ?>
             <?php $icon = $place === 'social' ? $iconFor($item['url']) : '' ?>
-            <li<?= $icon !== '' ? ' class="has-icon"' : '' ?>>
+            <?php $children = !empty($item['children']) ?>
+            <?php
+                $classes = ($icon !== '' ? 'has-icon ' : '').($children ? 'has-children' : '');
+                $classes = trim($classes);
+            ?>
+            <li<?= $classes !== '' ? ' class="'.$classes.'"' : '' ?>>
                 <a href="<?= esc_attr($item['url']) ?>"<?= $item['external'] ? ' rel="noopener noreferrer"' : '' ?><?php
                     if ($icon !== ''): ?> aria-label="<?= esc_attr($item['label']) ?>" title="<?= esc_attr($item['label']) ?>"<?php endif
                 ?>><?= $icon !== '' ? $icon : esc_html($item['label']) ?></a>
-                <?php if (!empty($item['children'])): ?>
+                <?php if ($children): ?>
+                    <?php // The button that opens this one on a narrow screen, where there is
+                          // no pointer to hover with. Hidden everywhere else, so the dropdown
+                          // on a wide screen stays what it is: CSS, and no script at all.
+                          //
+                          // Beside the link and not instead of it - a parent item is a page
+                          // somebody wrote, and a menu that cannot reach it is a page with no
+                          // way in. The label says which one it opens, because a screen reader
+                          // reading four buttons called "Show" learns nothing from any of them. ?>
+                    <button class="submenu-toggle" type="button" aria-expanded="false"
+                            aria-label="<?= esc_attr('Show what is under '.$item['label']) ?>">
+                        <span class="submenu-caret" aria-hidden="true"></span>
+                    </button>
                     <?= $this->fetch('dpress:menu', ['items' => $item['children'], 'place' => $place]) ?>
                 <?php endif ?>
             </li>

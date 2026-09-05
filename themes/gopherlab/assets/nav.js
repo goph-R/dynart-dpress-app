@@ -36,6 +36,23 @@
             open(toggle.getAttribute('aria-expanded') !== 'true');
         });
 
+        // The submenus, opened by the button beside the item that owns them. Delegated, because
+        // a menu is whatever somebody has put in it: binding each button would mean knowing
+        // how many there are, and a menu edited in the admin can grow one at any time.
+        //
+        // The button and not the link: a parent item is a page of its own, and a menu that
+        // swallows the tap to open a submenu is a page with no way in. On a wide screen the
+        // dropdown is CSS and this runs for nothing - the button is `display: none` there.
+        panel.addEventListener('click', function (event) {
+            var button = event.target.closest('.submenu-toggle');
+            if (!button) {
+                return;
+            }
+            var wanted = button.getAttribute('aria-expanded') !== 'true';
+            button.setAttribute('aria-expanded', wanted ? 'true' : 'false');
+            button.parentNode.classList.toggle('is-open', wanted);
+        });
+
         // Escape closes it and puts the focus back on the button, because the panel is the whole
         // of the screen under the brand and a keyboard has nowhere else to go.
         document.addEventListener('keydown', function (event) {

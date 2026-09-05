@@ -231,17 +231,33 @@ img, video { max-width: 100%; height: auto; }
 .nav-toggle-bars::before { top: -9px; }
 .nav-toggle-bars::after { top: 9px; }
 
+/* The button beside a menu item that has pages under it. Two borders of a square, turned:
+   a chevron that needs no font and no file, and turning it the other way up is the open
+   state. `display: none` until the panel shows it, so it is out of the tab order on every
+   wide screen rather than being a button somebody can reach and nothing happens. */
+.submenu-toggle { display: none; background: none; border: 0; margin: 0; padding: 14px 10px;
+                  color: var(--link); cursor: pointer; }
+.submenu-toggle:hover, .submenu-toggle[aria-expanded="true"] { color: var(--accent); }
+.submenu-caret {
+    display: block; width: 9px; height: 9px;
+    border-right: 2px solid currentColor; border-bottom: 2px solid currentColor;
+    /* the box is turned about its own middle, and the nudge puts the *chevron* back on it */
+    transform: translateY(-3px) rotate(45deg);
+}
+.submenu-toggle[aria-expanded="true"] .submenu-caret {
+    transform: translateY(2px) rotate(225deg);
+}
+
 @media (max-width: 779px) {
     /* the button on the right of the brand, and the panel under the two of them */
     .js-nav .nav-toggle { display: block; }
     .js-nav .site-panel { display: none; }
     .js-nav .site-panel.is-open { display: block; }
 
-    /* One rule for every row in the panel, whichever of the three it belongs to: a line above
-       it. The last row has none below it and needs none - the content surface underneath is a
-       different colour, which is already the edge. */
-    .site-panel .menu > li,
-    .site-panel .site-social,
+    /* A line above each row of the menu, and above the account row at the bottom. `.container >
+       .menu > li` and not `.menu > li`, because the second matches the items of a submenu too
+       - and a submenu is one item unfolded rather than four more rows of the menu. */
+    .site-panel .container > .menu > li,
     .site-panel .site-account { border-top: 1px solid var(--line); }
 
     /* Everything in the panel is set to the right edge, under the button that opened it. The
@@ -254,17 +270,27 @@ img, video { max-width: 100%; height: auto; }
                         border-top: 0; }
 
     /* A submenu is a dropdown on a wide screen, where there is a pointer to hover with. Here
-       it is simply open, one line each, told apart by being smaller rather than by an indent
-       - an indent reads as nothing at all against a right edge. */
+       it is closed, and the button beside its item opens it - told apart from the rows of
+       the menu by being smaller and by having no line of its own, rather than by an indent,
+       which reads as nothing at all against a right edge. */
+    .js-nav .site-panel .submenu-toggle { display: block; }
+    /* the item becomes a row of two, the caret on the left of the label so that every label
+       in the panel still ends on the same right edge, and the submenu on a line of its own */
+    .site-panel .has-children { display: flex; flex-wrap: wrap;
+                                align-items: center; justify-content: flex-end; }
+    .site-panel .has-children > .submenu-toggle { order: -1; }
+    .site-panel .has-children > a { padding-left: 4px; }
+    .site-panel .has-children > .menu { width: 100%; }
     .site-panel .menu .menu {
-        display: block; position: static; min-width: 0; background: none; padding: 0;
+        display: none; position: static; min-width: 0; background: none; padding: 0;
     }
     .site-panel .menu .menu a { padding: 12px var(--pad); font-size: 16px; }
-    /* and the two rules that open it on a wide screen have to be answered in their own
-       words: `li:hover > .menu` is a more specific selector than the one above, so without
-       this a tap that lands as a hover turns the open submenu into a flex column */
+    /* The two rules that open it on a wide screen have to be answered in their own words:
+       `li:hover > .menu` is a more specific selector than the one above. And then the open
+       state, last, because it matches exactly as specifically as they do. */
     .site-nav .menu li:hover > .menu,
-    .site-nav .menu li:focus-within > .menu { display: block; }
+    .site-nav .menu li:focus-within > .menu { display: none; }
+    .site-panel .menu li.is-open > .menu { display: block; }
 
     .header-aside { display: block; }
     .site-panel .site-social { justify-content: flex-end; padding: 16px var(--pad); }
