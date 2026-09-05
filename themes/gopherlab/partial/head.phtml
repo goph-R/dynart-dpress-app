@@ -21,6 +21,17 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin
       href="<?= esc_attr($theme->url('roboto-condensed-latin-ext.woff2', false)) ?>">
 <link rel="stylesheet" href="<?= esc_attr($theme->url('style.css')) ?>">
+
+<?php // The header panel below 780px. Two lines and one small file, and both only when the
+      // file is there - a theme without it is a theme whose menu is simply always open.
+      //
+      // The class is written **inline** rather than by the file: the stylesheet hides the
+      // panel under it, and a deferred script setting it is a panel that paints open and
+      // then vanishes. The behaviour has no such hurry, so that part is deferred. ?>
+<?php if ($theme->exists('nav.js')): ?>
+    <script>document.documentElement.className += ' js-nav';</script>
+    <script src="<?= esc_attr($theme->url('nav.js')) ?>" defer></script>
+<?php endif ?>
 <?php // Font Awesome, if it has been put in `assets/`. Loaded only when it is there, so the theme
       // works without it and `{{ icon(...) }}` in a post is simply a class nothing draws.
       //

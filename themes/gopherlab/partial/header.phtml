@@ -1,4 +1,6 @@
-<?php // The brand, whatever the site put in `social`, and the menu bar under it ?>
+<?php // The brand, and behind it the menu, the social marks and the account links. On a wide
+      // screen those three are where they have always been; below 780px they are one panel
+      // behind the button, and the header is a brand and a button. ?>
 <header class="site-header">
     <div class="container header-inner">
         <a class="brand" href="<?= esc_attr(route_url('/')) ?>">
@@ -13,9 +15,23 @@
             </span>
         </a>
         <span class="spacer"></span>
-        <?php // the marks and the account links share a column at the right, one under the
-              // other: they are two different things, and side by side they read as one row
-              // of six links while taking the width the brand wants ?>
+        <?php // Narrow screens only, and only when the script that works it has run - the
+              // stylesheet shows it under `.js-nav`, which `nav.js` writes. Without the
+              // script there is no button and the panel is simply open, which is a menu
+              // somebody can still use rather than one that has silently gone. ?>
+        <button class="nav-toggle" type="button" aria-controls="site-panel" aria-expanded="false">
+            <span class="nav-toggle-bars" aria-hidden="true"></span>
+            <span class="sr-only">Menu</span>
+        </button>
+    </div>
+    <?php // One box for the three things a narrow screen puts behind the button, in the order
+          // they are read there: the menu, the marks, the account links. On a wide screen the
+          // box is `display: contents`, so its children become items of the header's own grid
+          // and land where they always did - the aside beside the brand, the bar underneath. ?>
+    <div class="site-panel" id="site-panel">
+        <?php if (($main_menu ?? '') !== ''): ?>
+            <nav class="site-nav"><div class="container"><?= $main_menu ?></div></nav>
+        <?php endif ?>
         <div class="header-aside">
             <?php // a place of its own, so the GitHub / YouTube links are a menu somebody edits
                   // rather than markup somebody has to open a template to change ?>
@@ -43,6 +59,3 @@
         </div>
     </div>
 </header>
-<?php if (($main_menu ?? '') !== ''): ?>
-    <nav class="site-nav"><div class="container"><?= $main_menu ?></div></nav>
-<?php endif ?>

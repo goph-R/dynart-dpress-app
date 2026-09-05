@@ -134,6 +134,23 @@ img, video { max-width: 100%; height: auto; }
 .header-inner { display: flex; align-items: center; gap: 18px;
                 padding-top: 18px; padding-bottom: 18px; }
 
+/* On a wide screen the panel is not a box at all: `display: contents` drops it out of the
+   layout and hands its children to the header, which is a two column grid - the brand row
+   and the aside beside it, the menu bar across the bottom. Which is where all three were
+   before there was a panel, so the mobile grouping costs the desktop nothing. */
+@media (min-width: 780px) {
+    .site-header { display: grid; grid-template-columns: 1fr auto; }
+    .header-inner { grid-column: 1; grid-row: 1; }
+    .site-panel { display: contents; }
+    /* its own right inset, because it is no longer inside the `.container` that had one */
+    .header-aside { grid-column: 2; grid-row: 1; align-self: center; padding-right: var(--pad); }
+    /* `margin: 0`, against the `margin-left/right: auto` it carries as one of the four boxes
+       the site is wide: auto margins on a grid item stop it stretching, and the bar would
+       shrink to the width of its own links and sit in the middle. The header above it is
+       already held to `--container`, so it has nothing left to do here anyway. */
+    .site-nav { grid-column: 1 / -1; grid-row: 2; margin: 0; }
+}
+
 .brand { display: flex; align-items: center; gap: 16px; color: var(--text); }
 .brand:hover { color: var(--text); }
 .brand img { width: 64px; height: auto; }
@@ -198,6 +215,65 @@ img, video { max-width: 100%; height: auto; }
 .site-nav .menu .menu a { padding: 10px 16px; font-size: 16px; border-top-color: transparent; }
 .site-nav .menu .menu a:hover { border-top-color: transparent; background: var(--sunken); }
 
+/* --- the narrow header ---------------------------------------------------------------- */
+
+/* Three bars drawn out of one box and its two pseudo elements, in `currentColor`, so the
+   hover and the open state are a colour and nothing more. Hidden until the script says it
+   works: `.js-nav` is written inline in the head, and without it the panel is simply open. */
+.nav-toggle { display: none; background: none; border: 0; margin: 0; padding: 10px 0;
+              color: var(--link); cursor: pointer; }
+.nav-toggle:hover, .nav-toggle[aria-expanded="true"] { color: var(--accent); }
+.nav-toggle-bars { position: relative; display: block; width: 28px; height: 3px;
+                   background: currentColor; }
+.nav-toggle-bars::before, .nav-toggle-bars::after {
+    content: ''; position: absolute; left: 0; width: 28px; height: 3px; background: currentColor;
+}
+.nav-toggle-bars::before { top: -9px; }
+.nav-toggle-bars::after { top: 9px; }
+
+@media (max-width: 779px) {
+    /* the button on the right of the brand, and the panel under the two of them */
+    .js-nav .nav-toggle { display: block; }
+    .js-nav .site-panel { display: none; }
+    .js-nav .site-panel.is-open { display: block; }
+
+    /* One rule for every row in the panel, whichever of the three it belongs to: a line above
+       it. The last row has none below it and needs none - the content surface underneath is a
+       different colour, which is already the edge. */
+    .site-panel .menu > li,
+    .site-panel .site-social,
+    .site-panel .site-account { border-top: 1px solid var(--line); }
+
+    /* Everything in the panel is set to the right edge, under the button that opened it. The
+       inset goes on the link and not on the container around it, so that the line above each
+       row runs the whole width of the panel - the social and account rows below have no
+       container to be inset by, and three lines of three lengths is a stack of ledges. */
+    .site-nav .container { padding-left: 0; padding-right: 0; }
+    .site-nav .menu { display: block; }
+    .site-nav .menu a { text-align: right; padding: 14px var(--pad); font-size: 18px;
+                        border-top: 0; }
+
+    /* A submenu is a dropdown on a wide screen, where there is a pointer to hover with. Here
+       it is simply open, one line each, told apart by being smaller rather than by an indent
+       - an indent reads as nothing at all against a right edge. */
+    .site-panel .menu .menu {
+        display: block; position: static; min-width: 0; background: none; padding: 0;
+    }
+    .site-panel .menu .menu a { padding: 12px var(--pad); font-size: 16px; }
+    /* and the two rules that open it on a wide screen have to be answered in their own
+       words: `li:hover > .menu` is a more specific selector than the one above, so without
+       this a tap that lands as a hover turns the open submenu into a flex column */
+    .site-nav .menu li:hover > .menu,
+    .site-nav .menu li:focus-within > .menu { display: block; }
+
+    .header-aside { display: block; }
+    .site-panel .site-social { justify-content: flex-end; padding: 16px var(--pad); }
+    .site-panel .site-social .menu { gap: 22px; }
+    .site-panel .site-social a { font-size: 19px; }
+    .site-panel .site-account { justify-content: flex-end; padding: 16px var(--pad);
+                                font-size: 17px; }
+}
+
 /* --- the two columns ---------------------------------------------------------------------- */
 
 /* the whole two column area is the lighter surface, and the page shows around it - so an
@@ -254,9 +330,10 @@ body.home .site-content { padding-top: 0; }
     /* one featured post is a banner, not a two column grid with a hole in it */
     .featured-solo { grid-template-columns: 1fr; }
 }
-/* below 1025px the strip is the front page's first card and nothing more - the small ones would
- * be four cramped rows above a list that already says the same thing */
-@media (max-width: 1024px) { .featured-rest { display: none; } }
+/* Between 780px and 1025px the strip is the front page's first card and nothing more: the four
+ * small ones would be cramped rows across a width that is too wide for them and too narrow
+ * for the grid. Below 780px they come back - as list entries, see the bottom of this file. */
+@media (max-width: 1024px) and (min-width: 780px) { .featured-rest { display: none; } }
 
 /* The shape is the card's, not the file's: without it the big picture stretched to whatever
    height the four small ones happened to need, so the front page had a different banner every
@@ -296,6 +373,41 @@ body.home .site-content { padding-top: 0; }
 .featured-small h3 { font-size: 18px; margin: 0 0 6px; color: var(--text); line-height: 1.35; }
 .featured-small .meta { margin: 0; font-size: 14px; }
 .featured-small:hover h3 { color: var(--accent); }
+
+/* Below 780px the strip stops being a strip. A hero with its title over the picture is a shape
+   that needs width: at 360px the overlay is most of the card and the title is three lines of
+   white on a photograph. So all five featured posts take the shape of the entries underneath
+   them - picture, title, date - and the front page is one list from the top.
+
+   Which also puts the four back on the page. Between here and 1025px they are hidden, and a
+   featured post is left out of the list below, so on a phone those four were nowhere at all. */
+@media (max-width: 779px) {
+    .featured { display: block; margin-bottom: 0; }
+    .featured-rest { display: block; }
+    /* the list entry's own bottom margin, so the two kinds space alike */
+    .featured-lead, .featured-small { display: block; margin: 0 0 var(--gap); }
+    /* the ratio moves to the picture: it is the picture that is cropped here, and the card is
+       only as tall as what is in it */
+    .featured-lead { aspect-ratio: auto; }
+    .featured-lead img, .featured-small img {
+        width: 100%; height: auto; aspect-ratio: var(--card-ratio); object-fit: cover;
+        display: block; margin-bottom: 16px;
+    }
+    /* off the picture and under it, which is where the list keeps its titles */
+    .featured-lead .featured-details,
+    .featured-lead.has-image .featured-details {
+        position: static; display: block; background: none; padding: 0;
+    }
+    .featured-small > span { display: block; }
+    .featured-lead h2, .featured-lead.has-image h2, .featured-small h3 {
+        font-size: 29px; line-height: 1.2; margin: 0 0 10px; color: var(--link);
+    }
+    .featured-lead:hover h2, .featured-small:hover h3 { color: var(--accent); }
+    .featured-lead.has-image .meta, .featured-small .meta { color: var(--dim); font-size: 16px; }
+    /* the strip is flush to the menu bar because a hero is the top of the page. A list is not,
+       and wants the same air above it as every other page has */
+    body.home .site-content { padding-top: 40px; }
+}
 
 /* --- the list of posts -------------------------------------------------------------------- */
 
