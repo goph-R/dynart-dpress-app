@@ -52,25 +52,17 @@ RewriteRule ^(.*)$ index.php?route=/$1 [QSA,L]
 #
 # The static half is one line, and only for SVG: Debian's list covers html, css, js and xml
 # already, and misses `image/svg+xml`.
-<IfModule mod_headers.c>
-    Header set X-Htaccess-Dir "yes"
-</IfModule>
-
 <IfModule mod_deflate.c>
     AddOutputFilterByType DEFLATE image/svg+xml
 
     <Files "index.php">
-        # TEMPORARY, to be removed once compression is settled. Three attempts at compressing the
-        # PHP responses have done nothing, and every one of them assumed this file is consulted
-        # for a request that ends up proxied to FPM - which has never actually been verified. If
-        # `X-Htaccess-Files` comes back on a page, it is; if only `X-Htaccess-Dir` does, this
-        # `<Files>` never matches; if neither does, `.htaccess` does not reach a proxied response
-        # at all and the whole thing has to move into the vhost.
-        <IfModule mod_headers.c>
-            Header set X-Htaccess-Files "yes"
-        </IfModule>
         SetOutputFilter DEFLATE
-        SetEnvIfNoCase Request_URI \.(?:woff2?|ttf|otf|eot|png|jpe?g|gif|webp|avif|ico|mp4|webm|mp3|m4a|pdf|zip|gz)$ no-gzip dont-vary
+        # **`THE_REQUEST`, not `Request_URI`.** By the time `SetEnvIf` is evaluated the front
+        # controller rewrite has already changed `r->uri` to `/index.php`, so a pattern on
+        # `Request_URI` matches nothing and every font went through DEFLATE - which made a
+        # woff2 *28 bytes bigger* and cost the CPU to do it. `THE_REQUEST` is the original
+        # request line and the rewrite does not touch it.
+        SetEnvIfNoCase THE_REQUEST "\.(?:woff2?|ttf|otf|eot|png|jpe?g|gif|webp|avif|ico|mp4|webm|mp3|m4a|pdf|zip|gz)(\?[^ ]*)?\s" no-gzip dont-vary
     </Files>
 </IfModule>
 
