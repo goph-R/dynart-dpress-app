@@ -40,11 +40,26 @@ RewriteRule ^(.*)$ index.php?route=/$1 [QSA,L]
 # through both, and the second pass is compressing an already-compressed stream. Brotli is worth
 # maybe another tenth on top of this, and it belongs in the vhost as a replacement rather than
 # here as an addition.
-<IfModule mod_deflate.c>
-    AddOutputFilterByType DEFLATE text/html text/plain text/css text/xml
-    AddOutputFilterByType DEFLATE application/javascript application/json
-    AddOutputFilterByType DEFLATE application/xml application/rss+xml
-    AddOutputFilterByType DEFLATE image/svg+xml
+#
+# **`FilterProvider`, not `AddOutputFilterByType`** - and that is the whole reason this works.
+# `AddOutputFilterByType` picks the filter from the content type *as the request begins*, which
+# for a file on disk is known and for a response proxied to PHP-FPM is not: the type arrives with
+# the backend's headers, by which time the chain is already built. So the first version of this
+# block compressed `/static/dpress-logo.svg` and left every page and the stylesheet uncompressed,
+# because on this site both of those are PHP. `mod_filter` evaluates the condition against the
+# response instead, which is late enough to see it.
+<IfModule mod_filter.c>
+    FilterDeclare  COMPRESS
+    FilterProvider COMPRESS DEFLATE "%{CONTENT_TYPE} =~ m|^text/html|i"
+    FilterProvider COMPRESS DEFLATE "%{CONTENT_TYPE} =~ m|^text/plain|i"
+    FilterProvider COMPRESS DEFLATE "%{CONTENT_TYPE} =~ m|^text/css|i"
+    FilterProvider COMPRESS DEFLATE "%{CONTENT_TYPE} =~ m|^text/xml|i"
+    FilterProvider COMPRESS DEFLATE "%{CONTENT_TYPE} =~ m|^application/javascript|i"
+    FilterProvider COMPRESS DEFLATE "%{CONTENT_TYPE} =~ m|^application/json|i"
+    FilterProvider COMPRESS DEFLATE "%{CONTENT_TYPE} =~ m|^application/xml|i"
+    FilterProvider COMPRESS DEFLATE "%{CONTENT_TYPE} =~ m|^application/rss\+xml|i"
+    FilterProvider COMPRESS DEFLATE "%{CONTENT_TYPE} =~ m|^image/svg\+xml|i"
+    FilterChain    COMPRESS
 </IfModule>
 
 # --- How long a static file may be kept ---
