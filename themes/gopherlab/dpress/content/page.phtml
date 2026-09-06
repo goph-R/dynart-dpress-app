@@ -24,7 +24,11 @@
         <h1 class="entry-title"><?= esc_html($content->title) ?></h1>
         <?php if (!$content->isPublished()): ?><p class="meta"><strong>draft</strong></p><?php endif ?>
         <?php if (!empty($featured)): ?>
-            <p class="featured"><?= $mediaView->tag($featured, 'medium') ?></p>
+            <?php // Eager: this sits above the fold and is the largest thing on the page, so the
+                  // default lazy-load would keep the browser from starting it until layout has
+                  // run - see the lead card in `content/list.phtml`. ?>
+            <p class="featured"><?= $mediaView->tag($featured, 'medium',
+                ['loading' => 'eager', 'fetchpriority' => 'high']) ?></p>
         <?php endif ?>
         <div class="entry-content">
             <?php if ($show_lead ?? true): ?><?= $content->lead_html ?><?php endif ?>

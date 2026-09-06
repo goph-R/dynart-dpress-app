@@ -24,3 +24,47 @@ RewriteRule ^ %1 [R=301,L,QSA]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php?route=/$1 [QSA,L]
+
+# --- Compression ---
+#
+# Nothing was compressed before this: the front page went out as 22 KB where it gzips to 5, and
+# the stylesheet as 45 KB where it gzips to 14. That is ~48 KB off a first visit for a directive,
+# with no build step and nothing to keep in step - which is why it is here rather than a minifier
+# in front of the CSS. A minified stylesheet would also cost the comments, and this file is
+# commented on purpose.
+#
+# **By type, never by default.** A jpeg, a png and a woff2 are already compressed; running them
+# through DEFLATE spends CPU to make them very slightly bigger.
+#
+# Only DEFLATE, not BROTLI as well: with both filters on the same content Apache runs the output
+# through both, and the second pass is compressing an already-compressed stream. Brotli is worth
+# maybe another tenth on top of this, and it belongs in the vhost as a replacement rather than
+# here as an addition.
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/css text/xml
+    AddOutputFilterByType DEFLATE application/javascript application/json
+    AddOutputFilterByType DEFLATE application/xml application/rss+xml
+    AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+# --- How long a static file may be kept ---
+#
+# The theme's own assets are served by PHP and already say `immutable` for a year; this is for
+# the files Apache hands over itself, which said nothing at all - so every upload was refetched
+# or revalidated on every visit.
+#
+# **A month for an upload, not a year.** An upload's URL never changes content, because the
+# suffix is random per file - but `dpress media:regenerate` rewrites the *derivatives* in place
+# when a preset changes, and a year would leave the old thumbnail in every cache that has one,
+# with no way to reach it. A month is the trade: still far better than nothing, and a preset
+# change is visible to everybody within weeks rather than never.
+#
+# Fonts and the like keep the year, because they change by being replaced under a new name.
+<IfModule mod_headers.c>
+    <FilesMatch "\.(jpe?g|png|gif|webp|avif|svg|ico|mp4|webm|mp3|m4a|pdf)$">
+        Header set Cache-Control "public, max-age=2592000"
+    </FilesMatch>
+    <FilesMatch "\.(woff2?|ttf|otf|eot)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+</IfModule>

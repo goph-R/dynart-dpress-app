@@ -26,9 +26,16 @@ $featured_posts = $featured_posts ?? [];
                   // tab order, so the same destination is not offered three times over. ?>
             <article class="featured-lead<?= isset($thumbnails[$lead['id']]) ? ' has-image' : '' ?>">
                 <?php if (isset($thumbnails[$lead['id']])): ?>
+                    <?php // **Eager, and only this one.** `MediaView::tag()` lazy-loads by default,
+                          // which is right for every card below the fold and wrong for the one
+                          // above it: this is the largest thing a visitor sees first, so lazy
+                          // means the browser cannot start fetching it until layout has run, and
+                          // the metric that measures exactly that is the one it is worst for.
+                          // The cards further down keep the default. ?>
                     <a class="featured-image" tabindex="-1" aria-hidden="true"
                        href="<?= esc_attr(route_url($post_path.$lead['slug'])) ?>"><?=
-                        $mediaView->tag($thumbnails[$lead['id']], 'medium', ['alt' => ''])
+                        $mediaView->tag($thumbnails[$lead['id']], 'medium',
+                            ['alt' => '', 'loading' => 'eager', 'fetchpriority' => 'high'])
                     ?></a>
                 <?php endif ?>
                 <div class="featured-details">
