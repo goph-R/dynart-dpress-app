@@ -7,27 +7,39 @@ the configuration, the themes, the uploads and the front controller.
 
 ```bash
 composer install --no-dev -o
-cp dpress.ini.example dpress.ini
+
+vendor/bin/dpress init -base-url https://example.com -db-name mysite -db-user mysite                        -db-password 'from your database' -site-name "My Site"
 ```
 
-Then edit `dpress.ini` — every value that has to change is commented in it. The three that are
-not optional on a real site:
+`init` writes the `dpress.ini` and **generates `jwt.secret`** for you, which is the value that
+signs every session here and the one it used to be possible to leave as the words "change me".
+`app.root_path` comes from the directory you run it in, and it makes `logs/` while it is there.
+It will not overwrite a `dpress.ini` that already exists.
 
-- `app.root_path` and `app.base_url`, which everything else is resolved against
-- the `database.default.*` block, pointing at a database you have already created
-- `jwt.secret`, which signs every session: `php -r "echo bin2hex(random_bytes(32));"`
+Add **`-dev`** for a development site: it turns on error detail, turns off the secure-cookie flag
+so a plain HTTP site can log in at all, and points the mailer at `logs/` instead of sending.
 
-**`dpress.ini` is not in git**, on purpose. It holds a password and a secret, and the only copy
-that matters is the one on the machine it belongs to. `dpress.ini.example` is the shape of it.
+The database itself is the one thing it does not do:
+
+```sql
+create database `mysite` character set utf8mb4 collate utf8mb4_unicode_ci;
+```
+
+**`dpress.ini` is not in git**, on purpose: it holds a password and a secret, and the only copy
+that matters is the one on the machine it belongs to. There is no example of it here any more —
+`dpress init` writes it from the template inside the dpress package, so there is one shape of the
+file rather than two that drift apart.
 
 Then create the schema and somebody to log in as:
 
 ```bash
 vendor/bin/dpress install
 vendor/bin/dpress user:create -email you@example.com -name "Your Name" -role admin
+vendor/bin/dpress doctor
 ```
 
 Leaving `-password` off generates one and prints it, so it never reaches your shell history.
+`doctor` is the last step because it is the one that says whether the rest worked.
 
 ## Serving it
 
@@ -48,6 +60,7 @@ directive: under PHP-FPM Apache does not know it and every request into `uploads
 git pull
 composer update --no-dev
 vendor/bin/dpress upgrade      # applies whatever migrations are new
+vendor/bin/dpress doctor       # says whether anything needs attention afterwards
 ```
 
 ## Development
