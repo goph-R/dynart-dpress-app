@@ -29,37 +29,36 @@ RewriteRule ^(.*)$ index.php?route=/$1 [QSA,L]
 #
 # Nothing was compressed before this: the front page went out as 22 KB where it gzips to 5, and
 # the stylesheet as 45 KB where it gzips to 14. That is ~48 KB off a first visit for a directive,
-# with no build step and nothing to keep in step - which is why it is here rather than a minifier
-# in front of the CSS. A minified stylesheet would also cost the comments, and this file is
-# commented on purpose.
+# with no build step and nothing to keep in step.
 #
-# **By type, never by default.** A jpeg, a png and a woff2 are already compressed; running them
-# through DEFLATE spends CPU to make them very slightly bigger.
+# **Two rules, because a static file and a PHP response are compressed by different means, and
+# the second one is the whole story here.**
 #
-# Only DEFLATE, not BROTLI as well: with both filters on the same content Apache runs the output
-# through both, and the second pass is compressing an already-compressed stream. Brotli is worth
-# maybe another tenth on top of this, and it belongs in the vhost as a replacement rather than
-# here as an addition.
+# Debian's own `mods-enabled/deflate.conf` already carries `AddOutputFilterByType DEFLATE
+# text/html` at *server* level - and this site's pages were still going out uncompressed. That is
+# not a scope problem: PHP is handled by `SetHandler "proxy:unix:...php-fpm.sock"`, and
+# `AddOutputFilterByType` chooses the filter from the content type *before* the request is
+# handled, while a proxied response does not have one until FPM sends its headers back. By then
+# the chain is built. The type test can never match, at any scope, in a vhost or here.
 #
-# **`FilterProvider`, not `AddOutputFilterByType`** - and that is the whole reason this works.
-# `AddOutputFilterByType` picks the filter from the content type *as the request begins*, which
-# for a file on disk is known and for a response proxied to PHP-FPM is not: the type arrives with
-# the backend's headers, by which time the chain is already built. So the first version of this
-# block compressed `/static/dpress-logo.svg` and left every page and the stylesheet uncompressed,
-# because on this site both of those are PHP. `mod_filter` evaluates the condition against the
-# response instead, which is late enough to see it.
-<IfModule mod_filter.c>
-    FilterDeclare  COMPRESS
-    FilterProvider COMPRESS DEFLATE "%{CONTENT_TYPE} =~ m|^text/html|i"
-    FilterProvider COMPRESS DEFLATE "%{CONTENT_TYPE} =~ m|^text/plain|i"
-    FilterProvider COMPRESS DEFLATE "%{CONTENT_TYPE} =~ m|^text/css|i"
-    FilterProvider COMPRESS DEFLATE "%{CONTENT_TYPE} =~ m|^text/xml|i"
-    FilterProvider COMPRESS DEFLATE "%{CONTENT_TYPE} =~ m|^application/javascript|i"
-    FilterProvider COMPRESS DEFLATE "%{CONTENT_TYPE} =~ m|^application/json|i"
-    FilterProvider COMPRESS DEFLATE "%{CONTENT_TYPE} =~ m|^application/xml|i"
-    FilterProvider COMPRESS DEFLATE "%{CONTENT_TYPE} =~ m|^application/rss\+xml|i"
-    FilterProvider COMPRESS DEFLATE "%{CONTENT_TYPE} =~ m|^image/svg\+xml|i"
-    FilterChain    COMPRESS
+# So the dynamic half does not test the type at all. Every dynamic response on this site comes out
+# of `index.php` - the front controller is the only PHP file a request ever reaches - so
+# `SetOutputFilter` on that one file is exact, and it needs to know nothing about content types.
+#
+# The `no-gzip` line is the one thing that costs: `AssetController` serves the theme's fonts and
+# images through `index.php` too, and running a woff2 or a png through DEFLATE spends CPU to make
+# it marginally bigger. The request URI still ends in the real extension, so it is enough to look
+# at that.
+#
+# The static half is one line, and only for SVG: Debian's list covers html, css, js and xml
+# already, and misses `image/svg+xml`.
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE image/svg+xml
+
+    <Files "index.php">
+        SetOutputFilter DEFLATE
+        SetEnvIfNoCase Request_URI \.(?:woff2?|ttf|otf|eot|png|jpe?g|gif|webp|avif|ico|mp4|webm|mp3|m4a|pdf|zip|gz)$ no-gzip dont-vary
+    </Files>
 </IfModule>
 
 # --- How long a static file may be kept ---
