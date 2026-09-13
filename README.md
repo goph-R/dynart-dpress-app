@@ -1,6 +1,6 @@
-# A dpress site
+# A Dpress site
 
-The runnable site: a thin shell around [dpress](https://github.com/goph-R/dynart-dpress) holding
+The runnable site: a thin shell around [Dpress](https://github.com/goph-R/dynart-dpress) holding
 the configuration, the themes, the uploads and the front controller.
 
 ## Setting one up
@@ -27,7 +27,7 @@ create database `mysite` character set utf8mb4 collate utf8mb4_unicode_ci;
 
 **`dpress.ini` is not in git**, on purpose: it holds a password and a secret, and the only copy
 that matters is the one on the machine it belongs to. There is no example of it here any more —
-`dpress init` writes it from the template inside the dpress package, so there is one shape of the
+`dpress init` writes it from the template inside the Dpress package, so there is one shape of the
 file rather than two that drift apart.
 
 Then create the schema and somebody to log in as:

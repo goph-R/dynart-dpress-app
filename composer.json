@@ -1,6 +1,6 @@
 {
     "name": "dynart/dpress-app",
-    "description": "A dpress site.",
+    "description": "A Dpress site.",
     "type": "project",
     "license": "MIT",
     "autoload": {
