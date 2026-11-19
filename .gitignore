@@ -23,3 +23,13 @@
 # and gets a line here so this site does not commit a copy of somebody else's history. The
 # `reading-time` plugin is the exception on purpose: it is the worked example, and it
 # lives in this repository so there is one to read without cloning anything.
+/plugins/disqus
+/plugins/fontawesome
+/plugins/kofi
+/plugins/music-list
+
+# A theme that is its own repository, same reasoning as the plugins above: cloned into `themes/`
+# the way a theme is installed, and ignored here so this site does not commit a second copy of
+# its history. `plain` stays in this repository - it is the one a reader can look at without
+# cloning anything.
+/themes/gopherlab
